@@ -2,6 +2,14 @@
 
 fsw means from swoole but not all swoole. This project is the foundation of [study php extension](https://github.com/php-extension-research/study).
 
+# Build
+
+```shell
+~/codeDir/cppCode/fsw # cmake .
+~/codeDir/cppCode/fsw # make
+~/codeDir/cppCode/fsw # make install
+```
+
 # Example
 
 ```cpp
