@@ -35,5 +35,22 @@
 #include <sys/types.h>
 #include <sys/utsname.h>
 #include <sys/stat.h>
+#include <sys/epoll.h>
+
+#define FSW_EPOLL_CAP 16;
+
+typedef struct
+{
+    int epollfd;
+    int ncap;
+    struct epoll_event *events;
+} fswPoll_t;
+
+typedef struct
+{
+    fswPoll_t poll;
+} fswGlobal_t;
+
+extern fswGlobal_t FswG;
 
 #endif /* FSW_H_ */

@@ -58,12 +58,12 @@ static void sleep_timeout(uv_timer_t *timer)
 
 int Coroutine::sleep(double seconds)
 {
-    Coroutine* co = Coroutine::get_current();
+    Coroutine *co = Coroutine::get_current();
 
     uv_timer_t timer;
-	timer.data = co;
-	uv_timer_init(uv_default_loop(), &timer);
-	uv_timer_start(&timer, sleep_timeout, seconds * 1000, 0);
+    timer.data = co;
+    uv_timer_init(uv_default_loop(), &timer);
+    uv_timer_start(&timer, sleep_timeout, seconds * 1000, 0);
    
     co->yield();
     return 0;
@@ -82,12 +82,19 @@ extern "C" int uv__next_timeout(const uv_loop_t* loop);
 int Coroutine::scheduler()
 {
     int timeout;
-    uv_loop_t* loop = uv_default_loop();
+    size_t size;
+    uv_loop_t *loop = uv_default_loop();
+
+    FswG.poll.epollfd = epoll_create(256);
+    FswG.poll.ncap = FSW_EPOLL_CAP;
+    size = sizeof(struct epoll_event) * FswG.poll.ncap;
+    FswG.poll.events = (struct epoll_event *) malloc(size);
+    memset(FswG.poll.events, 0, size);
 
     while (loop->stop_flag == 0)
     {
         timeout = uv__next_timeout(loop);
-        usleep(timeout);
+        epoll_wait(FswG.poll.epollfd, FswG.poll.events, FswG.poll.ncap, timeout);
 
         loop->time = uv__hrtime(UV_CLOCK_FAST) / 1000000;
         uv__run_timers(loop);
