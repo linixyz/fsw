@@ -1,0 +1,37 @@
+#ifndef LOG_H_
+#define LOG_H_
+
+#include "fsw.h"
+
+#define FSW_OK 0
+#define FSW_ERR -1
+
+#define FSW_LOG_BUFFER_SIZE 1024
+#define FSW_LOG_DATE_STRLEN  64
+
+#define FSW_DEBUG_MSG_SIZE 512
+#define FSW_ERROR_MSG_SIZE 512
+
+extern char fsw_debug[FSW_DEBUG_MSG_SIZE];
+extern char fsw_error[FSW_ERROR_MSG_SIZE];
+
+#define fswDebug(str, ...)                                                         \
+    snprintf(fsw_debug, FSW_DEBUG_MSG_SIZE, str, ##__VA_ARGS__); \
+    fswLog_put(FSW_LOG_DEBUG, fsw_debug);
+#define fswWarn(str, ...)                                                         \
+    snprintf(fsw_error, FSW_ERROR_MSG_SIZE, "%s: " str " in %s on line %d.", __func__, ##__VA_ARGS__, __FILE__, __LINE__); \
+    fswLog_put(FSW_LOG_WARNING, fsw_error);
+
+enum fswLog_level
+{
+    FSW_LOG_DEBUG = 0,
+    FSW_LOG_TRACE,
+    FSW_LOG_INFO,
+    FSW_LOG_NOTICE,
+    FSW_LOG_WARNING,
+    FSW_LOG_ERROR,
+};
+
+void fswLog_put(int level, char *cnt);
+
+#endif /* LOG_H_ */
