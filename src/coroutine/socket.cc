@@ -35,5 +35,18 @@ ssize_t Socket::send(const void *buf, size_t len)
 
 bool Socket::wait_event(int event)
 {
+    long id;
+    Coroutine* co;
+    epoll_event *ev;
+
+    co = Coroutine::get_current();
+    id = co->get_cid();
+    ev = FswG.poll.events;
+
+    ev->events = event == FSW_EVENT_READ ? EPOLLIN : EPOLLOUT;
+    ev->data.u64 = touint64(sockfd, id);
+    epoll_ctl(FswG.poll.epollfd, EPOLL_CTL_ADD, sockfd, ev);
+
+    co->yield();
     return 0;
 }
