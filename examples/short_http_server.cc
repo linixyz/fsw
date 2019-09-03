@@ -1,3 +1,11 @@
+/**
+ * non-coroutine: 
+ * ab -c 100 -n 10000 http://127.0.0.1/
+ * Requests per second:    11946.56 [#/sec] (mean)
+ * Requests per second:    11310.96 [#/sec] (mean)
+ * Requests per second:    9484.07 [#/sec] (mean)
+ */
+
 #include <iostream>
 #include "fsw/coroutine.h"
 #include "fsw/socket.h"
