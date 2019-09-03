@@ -15,9 +15,14 @@
 extern char fsw_debug[FSW_DEBUG_MSG_SIZE];
 extern char fsw_error[FSW_ERROR_MSG_SIZE];
 
+#ifdef FSW_DEBUG
 #define fswDebug(str, ...)                                                         \
     snprintf(fsw_debug, FSW_DEBUG_MSG_SIZE, str, ##__VA_ARGS__); \
     fswLog_put(FSW_LOG_DEBUG, fsw_debug);
+#else
+#define fswDebug(str,...)
+#endif
+
 #define fswWarn(str, ...)                                                         \
     snprintf(fsw_error, FSW_ERROR_MSG_SIZE, "%s: " str " in %s on line %d.", __func__, ##__VA_ARGS__, __FILE__, __LINE__); \
     fswLog_put(FSW_LOG_WARNING, fsw_error);
