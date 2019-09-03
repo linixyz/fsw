@@ -18,9 +18,28 @@ Socket::~Socket()
 {
 }
 
+int Socket::bind(int type, char *host, int port)
+{
+    return fswSocket_bind(sockfd, type, host, port);
+}
+
+int Socket::listen()
+{
+    return fswSocket_listen(sockfd);
+}
+
 int Socket::accept()
 {
-    return 0;
+    int connfd;
+
+    connfd = fswSocket_accept(sockfd);
+    if (connfd < 0 && errno == EAGAIN)
+    {
+        wait_event(FSW_EVENT_READ);
+        connfd = fswSocket_accept(sockfd);
+    }
+
+    return connfd;
 }
 
 ssize_t Socket::recv(void *buf, size_t len)
@@ -48,5 +67,5 @@ bool Socket::wait_event(int event)
     epoll_ctl(FswG.poll.epollfd, EPOLL_CTL_ADD, sockfd, ev);
 
     co->yield();
-    return 0;
+    return true;
 }
