@@ -63,7 +63,7 @@ enum fswEvent_type
     FSW_EVENT_ERROR  = 1u << 11,
 };
 
-static uint64_t touint64(int fd, int id)
+static inline uint64_t touint64(int fd, int id)
 {
     uint64_t ret = 0;
     ret |= ((uint64_t)fd) << 32;
@@ -72,7 +72,7 @@ static uint64_t touint64(int fd, int id)
     return ret;
 }
 
-static void fromuint64(uint64_t v, int *fd, int *id)
+static inline void fromuint64(uint64_t v, int *fd, int *id)
 {
     *fd = (int)(v >> 32);
     *id = (int)(v & 0xffffffff);
