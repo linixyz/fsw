@@ -8,7 +8,7 @@
 
 #define DEFAULT_C_STACK_SIZE          (2 *1024 * 1024)
 
-namespace Fsw
+namespace fsw
 {
 class Coroutine
 {

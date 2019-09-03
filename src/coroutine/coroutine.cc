@@ -1,6 +1,6 @@
 #include "coroutine.h"
 
-using Fsw::Coroutine;
+using fsw::Coroutine;
 
 Coroutine* Coroutine::current = nullptr;
 long Coroutine::last_cid = 0;

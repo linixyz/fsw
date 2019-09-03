@@ -16,7 +16,7 @@ fsw means from swoole but not all swoole. This project is the foundation of [stu
 #include <iostream>
 #include "fsw/coroutine.h"
 
-using namespace Fsw;
+using namespace fsw;
 using namespace std;
 
 int main(int argc, char const *argv[])

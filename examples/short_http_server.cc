@@ -11,7 +11,7 @@
 #include "fsw/socket.h"
 #include "fsw/log.h"
 
-using namespace Fsw;
+using namespace fsw;
 using namespace std;
 
 char response_str[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\nContent-Length: 11\r\n\r\nhello world\r\n";

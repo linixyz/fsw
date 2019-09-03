@@ -3,7 +3,7 @@
 
 #include "fsw.h"
 
-namespace Fsw { namespace Coroutine {
+namespace fsw { namespace coroutine {
 class Socket
 {
 private:

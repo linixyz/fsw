@@ -1,7 +1,7 @@
 #include <iostream>
 #include "fsw/coroutine.h"
 
-using namespace Fsw;
+using namespace fsw;
 using namespace std;
 
 int main(int argc, char const *argv[])

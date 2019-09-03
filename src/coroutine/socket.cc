@@ -1,7 +1,9 @@
 #include "coroutine_socket.h"
+#include "coroutine.h"
 #include "socket.h"
 
-using Fsw::Coroutine::Socket;
+using fsw::Coroutine;
+using fsw::coroutine::Socket;
 
 Socket::Socket(int type)
 {

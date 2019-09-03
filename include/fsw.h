@@ -53,4 +53,14 @@ typedef struct
 
 extern fswGlobal_t FswG;
 
+enum fswEvent_type
+{
+    FSW_EVENT_NULL   = 0,
+    FSW_EVENT_DEAULT = 1u << 8,
+    FSW_EVENT_READ   = 1u << 9,
+    FSW_EVENT_WRITE  = 1u << 10,
+    FSW_EVENT_RDWR   = FSW_EVENT_READ | FSW_EVENT_WRITE,
+    FSW_EVENT_ERROR  = 1u << 11,
+};
+
 #endif /* FSW_H_ */
