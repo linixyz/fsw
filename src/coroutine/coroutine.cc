@@ -81,7 +81,6 @@ extern "C" int uv__next_timeout(const uv_loop_t* loop);
 
 int Coroutine::scheduler()
 {
-    int timeout;
     uv_loop_t *loop = uv_default_loop();
 
     if (!FswG.poll)
@@ -91,13 +90,30 @@ int Coroutine::scheduler()
 
     while (loop->stop_flag == 0)
     {
+        int n;
+        int timeout;
+        epoll_event *events;
+
         timeout = uv__next_timeout(loop);
-        epoll_wait(FswG.poll->epollfd, FswG.poll->events, FswG.poll->ncap, timeout);
+        events = FswG.poll->events;
+        n = epoll_wait(FswG.poll->epollfd, events, FswG.poll->ncap, timeout);
+        
+        for (int i = 0; i < n; i++) {
+            int fd;
+            int id;
+            struct epoll_event *p = &events[i];
+            uint64_t u64 = p->data.u64;
+            Coroutine *co;
+
+            fromuint64(u64, &fd, &id);
+            co = get_by_cid(id);
+            co->resume();
+        }
 
         loop->time = uv__hrtime(UV_CLOCK_FAST) / 1000000;
         uv__run_timers(loop);
 
-        if (uv__next_timeout(loop) < 0)
+        if (uv__next_timeout(loop) < 0 && !FswG.poll)
         {
             uv_stop(loop);
         }
