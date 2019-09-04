@@ -45,12 +45,28 @@ int Socket::accept()
 
 ssize_t Socket::recv(void *buf, size_t len)
 {
-    return 0;
+    int ret;
+
+    ret = fswSocket_recv(sockfd, buf, len, 0);
+    if (ret < 0 && errno == EAGAIN)
+    {
+        wait_event(FSW_EVENT_READ);
+        ret = fswSocket_recv(sockfd, buf, len, 0);
+    }
+    return ret;
 }
 
 ssize_t Socket::send(const void *buf, size_t len)
 {
-    return 0;
+    int ret;
+
+    ret = fswSocket_send(sockfd, buf, len, 0);
+    if (ret < 0 && errno == EAGAIN)
+    {
+        wait_event(FSW_EVENT_WRITE);
+        ret = fswSocket_send(sockfd, buf, len, 0);
+    }
+    return ret;
 }
 
 bool Socket::wait_event(int event)
