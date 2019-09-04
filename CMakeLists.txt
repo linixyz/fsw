@@ -1,32 +1,44 @@
-PROJECT(libfsw)
+project(libfsw)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8)
 
-ENABLE_LANGUAGE(ASM)
-SET(FSW_VERSION 0.0.1)
-SET(FSW_CLFLAGS pthread uv)
+enable_language(ASM)
+set(FSW_VERSION 0.0.1)
+set(FSW_CLFLAGS pthread uv)
 set(CMAKE_CXX_STANDARD 11)
+set(ENABLE_DEBUG OFF)
+
+option(ENABLE_DEBUGGER "Enable debug" ${ENABLE_DEBUG})
+if (ENABLE_DEBUGGER)
+    set(ENABLE_DEBUGGER 1)
+    message ("-- Enable debug: yes")
+else()
+    set(ENABLE_DEBUGGER 0)
+    message ("-- Enable debug: no")
+endif()
+
+configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/include/config.h)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-SET(CMAKE_BUILD_TYPE Debug)
-SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
 
 file(GLOB_RECURSE SRC_LIST FOLLOW_SYMLINKS src/*.c src/*.cc thirdparty/boost/asm/combined.S)
 file(GLOB_RECURSE HEAD_FILES FOLLOW_SYMLINKS include/*.h)
 
-SET(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
-INCLUDE_DIRECTORIES(BEFORE ./include)
+include_directories(BEFORE ./include)
 
 #shared library
 add_library(shared SHARED ${SRC_LIST})
 set_target_properties(shared PROPERTIES OUTPUT_NAME "fsw" VERSION ${FSW_VERSION})
 target_link_libraries(shared ${FSW_CLFLAGS})
 
-LINK_DIRECTORIES(${LIBRARY_OUTPUT_PATH})
+link_directories(${LIBRARY_OUTPUT_PATH})
 
 #install
-INSTALL(CODE "MESSAGE(\"Are you run command using root user?\")")
-INSTALL(TARGETS shared LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
-INSTALL(FILES ${HEAD_FILES} DESTINATION include/fsw)
+install(CODE "MESSAGE(\"Are you run command using root user?\")")
+install(TARGETS shared LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(FILES ${HEAD_FILES} DESTINATION include/fsw)

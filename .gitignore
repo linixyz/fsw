@@ -8,3 +8,4 @@ CMakeCache.txt
 install_manifest.txt
 Makefile
 install_header.sh
+include/config.h

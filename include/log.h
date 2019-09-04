@@ -2,6 +2,7 @@
 #define LOG_H_
 
 #include "fsw.h"
+#include "config.h"
 
 #define FSW_OK 0
 #define FSW_ERR -1
@@ -15,7 +16,7 @@
 extern char fsw_debug[FSW_DEBUG_MSG_SIZE];
 extern char fsw_error[FSW_ERROR_MSG_SIZE];
 
-#ifdef FSW_DEBUG
+#if FSW_DEBUG
 #define fswDebug(str, ...)                                                         \
     snprintf(fsw_debug, FSW_DEBUG_MSG_SIZE, str, ##__VA_ARGS__); \
     fswLog_put(FSW_LOG_DEBUG, fsw_debug);
