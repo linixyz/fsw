@@ -68,7 +68,7 @@ int fswSocket_accept(int sock)
 
     len = sizeof(sa);
     connfd = accept(sock, (struct sockaddr *)&sa, &len);
-    if (connfd < 0)
+    if (connfd < 0 && errno != EAGAIN)
     {
         fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
     }
