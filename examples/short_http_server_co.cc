@@ -33,15 +33,17 @@ int main(int argc, char const *argv[])
         {
             int connfd = sock.accept();
 
+            Socket conn(connfd);
+
             Coroutine::create([](void *_sock)
             {
-                int connfd = (intptr_t)_sock;
                 int ret;
                 char buf[1024] = {0};
 
+                Socket conn = *(Socket *)_sock;
+
                 fswDebug("connfd[%d] recv.", connfd);
-                ret = fswSocket_recv(connfd, buf, sizeof(buf) - 1, 0);
-                
+                ret = conn.recv(buf, sizeof(buf) - 1);
                 if (ret < 0)
                 {
                     fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
@@ -50,15 +52,14 @@ int main(int argc, char const *argv[])
                 
                 buf[ret] = 0;
                 fswDebug("connfd[%d] send.", connfd);
-                ret = fswSocket_send(connfd, response_str, sizeof(response_str) - 1, 0);
+                ret = conn.send(buf, sizeof(buf) - 1);
                 if (ret < 0)
                 {
                     fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
                 }
                 fswDebug("connfd[%d] send success.", connfd);
-                close(connfd);
-
-            }, (void *)(intptr_t)connfd);
+                conn.close();
+            }, (void *)&conn);
         }
     }, &param);
 
