@@ -1,28 +1,11 @@
 #include "socket.h"
 #include "log.h"
 
-int fswSocket_create(int type)
+int fswSocket_create(int domain, int type, int protocol)
 {
-    int _domain;
-    int _type;
     int sock;
 
-    if (type == FSW_SOCK_TCP)
-    {
-        _domain = AF_INET;
-        _type = SOCK_STREAM;
-    }
-    else if (type == FSW_SOCK_UDP)
-    {
-        _domain = AF_INET;
-        _type = SOCK_DGRAM;
-    }
-    else
-    {
-        return -1;
-    }
-
-    sock = socket(_domain, _type, 0);
+    sock = socket(domain, type, protocol);
     if (sock < 0)
     {
         fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));

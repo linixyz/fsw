@@ -9,7 +9,7 @@ class Socket
 private:
     int sockfd;
 public:
-    Socket(int type);
+    Socket(int domain, int type, int protocol);
     ~Socket();
     int bind(int type, char *host, int port);
     int listen();

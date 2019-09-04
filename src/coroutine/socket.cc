@@ -5,9 +5,9 @@
 using fsw::Coroutine;
 using fsw::coroutine::Socket;
 
-Socket::Socket(int type)
+Socket::Socket(int domain, int type, int protocol)
 {
-    sockfd = fswSocket_create(type);
+    sockfd = fswSocket_create(domain, type, protocol);
     if (sockfd < 0)
     {
         return;
