@@ -30,6 +30,12 @@ public:
         return cid;
     }
 
+    static inline Coroutine* get_by_cid(long cid)
+    {
+        auto i = coroutines.find(cid);
+        return i != coroutines.end() ? i->second : nullptr;
+    }
+
 protected:
     Coroutine *origin;
     static Coroutine* current;
