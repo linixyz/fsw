@@ -1,3 +1,4 @@
 #pragma once
 
 #define FSW_DEBUG ${ENABLE_DEBUGGER}
+#cmakedefine HAVE_EPOLL

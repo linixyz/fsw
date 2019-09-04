@@ -35,7 +35,12 @@
 #include <sys/types.h>
 #include <sys/utsname.h>
 #include <sys/stat.h>
+
+#include "config.h"
+
+#ifdef HAVE_EPOLL
 #include <sys/epoll.h>
+#endif
 
 #define FSW_EPOLL_CAP 16;
 

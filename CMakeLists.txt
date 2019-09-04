@@ -8,6 +8,9 @@ set(FSW_CLFLAGS pthread uv)
 set(CMAKE_CXX_STANDARD 11)
 set(ENABLE_DEBUG OFF)
 
+include(CheckFunctionExists)
+check_function_exists(epoll_create HAVE_EPOLL)
+
 option(ENABLE_DEBUGGER "Enable debug" ${ENABLE_DEBUG})
 if (ENABLE_DEBUGGER)
     set(ENABLE_DEBUGGER 1)
