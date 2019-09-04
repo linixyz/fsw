@@ -12,6 +12,7 @@ Socket::Socket(int type)
     {
         return;
     }
+    fswSocket_set_nonblock(sockfd);
 }
 
 Socket::~Socket()

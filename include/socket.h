@@ -16,5 +16,6 @@ int fswSocket_accept(int sock);
 
 ssize_t fswSocket_recv(int sock, void *buf, size_t len, int flag);
 ssize_t fswSocket_send(int sock, void *buf, size_t len, int flag);
+int fswSocket_set_nonblock(int sock);
 
 #endif	/* SOCKET_H */

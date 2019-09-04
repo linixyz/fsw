@@ -111,3 +111,20 @@ ssize_t fswSocket_send(int sock, void *buf, size_t len, int flag)
     }
     return ret;
 }
+
+int fswSocket_set_nonblock(int sock)
+{
+    int flags;
+
+    flags = fcntl(sock, F_GETFL, 0);
+    if (flags < 0) {
+        fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+        return -1;
+    }
+    flags = fcntl(sock, F_SETFL, flags | O_NONBLOCK);
+    if (flags < 0) {
+        fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+        return -1;
+    }
+    return 0;
+}
