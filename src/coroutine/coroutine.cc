@@ -82,19 +82,17 @@ extern "C" int uv__next_timeout(const uv_loop_t* loop);
 int Coroutine::scheduler()
 {
     int timeout;
-    size_t size;
     uv_loop_t *loop = uv_default_loop();
 
-    FswG.poll.epollfd = epoll_create(256);
-    FswG.poll.ncap = FSW_EPOLL_CAP;
-    size = sizeof(struct epoll_event) * FswG.poll.ncap;
-    FswG.poll.events = (struct epoll_event *) malloc(size);
-    memset(FswG.poll.events, 0, size);
+    if (!FswG.poll)
+    {
+        init_fswPoll();
+    }
 
     while (loop->stop_flag == 0)
     {
         timeout = uv__next_timeout(loop);
-        epoll_wait(FswG.poll.epollfd, FswG.poll.events, FswG.poll.ncap, timeout);
+        epoll_wait(FswG.poll->epollfd, FswG.poll->events, FswG.poll->ncap, timeout);
 
         loop->time = uv__hrtime(UV_CLOCK_FAST) / 1000000;
         uv__run_timers(loop);
@@ -104,6 +102,8 @@ int Coroutine::scheduler()
             uv_stop(loop);
         }
     }
+
+    free_fswPoll();
 
     return 0;
 }

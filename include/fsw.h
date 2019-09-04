@@ -53,7 +53,7 @@ typedef struct
 
 typedef struct
 {
-    fswPoll_t poll;
+    fswPoll_t *poll;
 } fswGlobal_t;
 
 extern fswGlobal_t FswG;
@@ -81,6 +81,25 @@ static inline void fromuint64(uint64_t v, int *fd, int *id)
 {
     *fd = (int)(v >> 32);
     *id = (int)(v & 0xffffffff);
+}
+
+static inline void init_fswPoll()
+{
+    size_t size;
+
+    FswG.poll = (fswPoll_t *)malloc(sizeof(fswPoll_t));
+
+    FswG.poll->epollfd = epoll_create(256);
+    FswG.poll->ncap = FSW_EPOLL_CAP;
+    size = sizeof(struct epoll_event) * FswG.poll->ncap;
+    FswG.poll->events = (struct epoll_event *) malloc(size);
+    memset(FswG.poll->events, 0, size);
+}
+
+static inline void free_fswPoll()
+{
+    free(FswG.poll->events);
+    free(FswG.poll);
 }
 
 #endif /* FSW_H_ */

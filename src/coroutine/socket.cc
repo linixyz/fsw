@@ -61,11 +61,16 @@ bool Socket::wait_event(int event)
 
     co = Coroutine::get_current();
     id = co->get_cid();
-    ev = FswG.poll.events;
+
+    if (!FswG.poll)
+    {
+        init_fswPoll();
+    }
+    ev = FswG.poll->events;
 
     ev->events = event == FSW_EVENT_READ ? EPOLLIN : EPOLLOUT;
     ev->data.u64 = touint64(sockfd, id);
-    epoll_ctl(FswG.poll.epollfd, EPOLL_CTL_ADD, sockfd, ev);
+    epoll_ctl(FswG.poll->epollfd, EPOLL_CTL_ADD, sockfd, ev);
 
     co->yield();
     return true;
