@@ -59,6 +59,18 @@ int fswSocket_accept(int sock)
     return connfd;
 }
 
+int fswSocket_close(int fd)
+{
+    int ret;
+
+    ret = close(fd);
+    if (ret < 0)
+    {
+        fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+    }
+    return ret;
+}
+
 int fswSocket_listen(int sock)
 {
     int ret;
@@ -76,7 +88,7 @@ ssize_t fswSocket_recv(int sock, void *buf, size_t len, int flag)
     ssize_t ret;
 
     ret = recv(sock, buf, len, flag);
-    if (ret < 0)
+    if (ret < 0 && errno != EAGAIN)
     {
         fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
     }
@@ -88,7 +100,7 @@ ssize_t fswSocket_send(int sock, const void *buf, size_t len, int flag)
     ssize_t ret;
 
     ret = send(sock, buf, len, flag);
-    if (ret < 0)
+    if (ret < 0 && errno != EAGAIN)
     {
         fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
     }

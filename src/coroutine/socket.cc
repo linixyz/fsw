@@ -15,6 +15,12 @@ Socket::Socket(int domain, int type, int protocol)
     fswSocket_set_nonblock(sockfd);
 }
 
+Socket::Socket(int fd)
+{
+    sockfd = fd;
+    fswSocket_set_nonblock(sockfd);
+}
+
 Socket::~Socket()
 {
 }
@@ -67,6 +73,11 @@ ssize_t Socket::send(const void *buf, size_t len)
         ret = fswSocket_send(sockfd, buf, len, 0);
     }
     return ret;
+}
+
+int Socket::close()
+{
+    return fswSocket_close(sockfd);
 }
 
 bool Socket::wait_event(int event)
