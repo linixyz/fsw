@@ -25,7 +25,7 @@ int main(int argc, char const *argv[])
         int port = _param->port;
         char ip[] = "127.0.0.1";
 
-        Socket sock(FSW_SOCK_TCP);
+        Socket sock(AF_INET, SOCK_STREAM, 0);
         sock.bind(FSW_SOCK_TCP, ip, port);
         sock.listen();
     
