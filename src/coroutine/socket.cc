@@ -39,12 +39,10 @@ int Socket::accept()
 {
     int connfd;
 
-    connfd = fswSocket_accept(sockfd);
-    if (connfd < 0 && errno == EAGAIN)
+    do
     {
-        wait_event(FSW_EVENT_READ);
         connfd = fswSocket_accept(sockfd);
-    }
+    } while (connfd < 0 && errno == EAGAIN && wait_event(FSW_EVENT_READ));
 
     return connfd;
 }
@@ -53,12 +51,11 @@ ssize_t Socket::recv(void *buf, size_t len)
 {
     int ret;
 
-    ret = fswSocket_recv(sockfd, buf, len, 0);
-    if (ret < 0 && errno == EAGAIN)
+    do
     {
-        wait_event(FSW_EVENT_READ);
         ret = fswSocket_recv(sockfd, buf, len, 0);
-    }
+    } while (ret < 0 && errno == EAGAIN && wait_event(FSW_EVENT_READ));
+    
     return ret;
 }
 
@@ -66,12 +63,11 @@ ssize_t Socket::send(const void *buf, size_t len)
 {
     int ret;
 
-    ret = fswSocket_send(sockfd, buf, len, 0);
-    if (ret < 0 && errno == EAGAIN)
+    do
     {
-        wait_event(FSW_EVENT_WRITE);
         ret = fswSocket_send(sockfd, buf, len, 0);
-    }
+    } while (ret < 0 && errno == EAGAIN && wait_event(FSW_EVENT_WRITE));
+    
     return ret;
 }
 
