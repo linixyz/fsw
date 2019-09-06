@@ -14,6 +14,15 @@ Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
     ctx_ = make_fcontext(sp, stack_size_, (void (*)(intptr_t))&context_func);
 }
 
+Context::~Context()
+{
+    if (swap_ctx_)
+    {
+        free(stack_);
+        stack_ = NULL;
+    }
+}
+
 bool Context::swap_in()
 {
     jump_fcontext(&swap_ctx_, ctx_, (intptr_t) this, true);
