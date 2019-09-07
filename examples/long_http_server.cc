@@ -14,7 +14,7 @@ int main(int argc, char const *argv[])
     int connfd;
     char ip[] = "127.0.0.1";
 
-    sock = fswSocket_create(FSW_SOCK_TCP);
+    sock = fswSocket_create(AF_INET, SOCK_STREAM, 0);
     fswSocket_bind(sock, FSW_SOCK_TCP, ip, 80);
     fswSocket_listen(sock);
 

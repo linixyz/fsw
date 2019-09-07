@@ -1,6 +1,7 @@
 #include "coroutine_socket.h"
 #include "coroutine.h"
 #include "socket.h"
+#include "log.h"
 
 using fsw::Coroutine;
 using fsw::coroutine::Socket;
@@ -87,7 +88,7 @@ bool Socket::wait_event(int event)
 
     if (!FswG.poll)
     {
-        init_fswPoll();
+        fswError("Need to call fsw_event_init first.");
     }
     ev = FswG.poll->events;
 

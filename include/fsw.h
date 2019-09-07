@@ -68,6 +68,13 @@ enum fswEvent_type
     FSW_EVENT_ERROR  = 1u << 11,
 };
 
+int init_fswPoll();
+inline int free_fswPoll();
+
+int fsw_event_init();
+int fsw_event_wait();
+int fsw_event_free();
+
 static inline uint64_t touint64(int fd, int id)
 {
     uint64_t ret = 0;
@@ -81,25 +88,6 @@ static inline void fromuint64(uint64_t v, int *fd, int *id)
 {
     *fd = (int)(v >> 32);
     *id = (int)(v & 0xffffffff);
-}
-
-static inline void init_fswPoll()
-{
-    size_t size;
-
-    FswG.poll = (fswPoll_t *)malloc(sizeof(fswPoll_t));
-
-    FswG.poll->epollfd = epoll_create(256);
-    FswG.poll->ncap = FSW_EPOLL_CAP;
-    size = sizeof(struct epoll_event) * FswG.poll->ncap;
-    FswG.poll->events = (struct epoll_event *) malloc(size);
-    memset(FswG.poll->events, 0, size);
-}
-
-static inline void free_fswPoll()
-{
-    free(FswG.poll->events);
-    free(FswG.poll);
 }
 
 #endif /* FSW_H_ */

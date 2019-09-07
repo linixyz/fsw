@@ -1,11 +1,14 @@
 #include <iostream>
 #include "fsw/coroutine.h"
+#include "fsw/fsw.h"
 
 using namespace fsw;
 using namespace std;
 
 int main(int argc, char const *argv[])
 {
+    fsw_event_init();
+
     Coroutine::create([](void *arg)
     {
         cout << "co1" << endl;
@@ -20,7 +23,7 @@ int main(int argc, char const *argv[])
         cout << "co2" << endl;
     });
 
-    Coroutine::scheduler();
+    fsw_event_wait();
     
     return 0;
 }

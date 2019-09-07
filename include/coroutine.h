@@ -23,7 +23,6 @@ public:
     void yield();
     void resume();
     static int sleep(double seconds);
-    static int scheduler();
 
     inline long get_cid()
     {

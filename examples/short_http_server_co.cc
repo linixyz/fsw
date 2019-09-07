@@ -17,6 +17,8 @@ struct co_param
 
 int main(int argc, char const *argv[])
 {
+    fsw_event_init();
+
     co_param param = {80};
 
     Coroutine::create([](void *param)
@@ -63,7 +65,7 @@ int main(int argc, char const *argv[])
         }
     }, &param);
 
-    Coroutine::scheduler();
+    fsw_event_wait();
 
     return 0;
 }
