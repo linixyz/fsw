@@ -20,6 +20,11 @@ public:
     int close();
 
     bool wait_event(int event);
+
+    inline int get_fd()
+    {
+        return sockfd;
+    }
 };
 }
 }

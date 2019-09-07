@@ -39,27 +39,28 @@ int main(int argc, char const *argv[])
 
             Coroutine::create([](void *_sock)
             {
+                Coroutine::sleep(0.001);
                 int ret;
                 char buf[1024] = {0};
 
                 Socket conn = *(Socket *)_sock;
 
-                fswDebug("connfd[%d] recv.", connfd);
+                fswDebug("connfd[%d] recv.", conn.get_fd());
                 ret = conn.recv(buf, sizeof(buf) - 1);
                 if (ret < 0)
                 {
                     fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
                 }
-                fswDebug("connfd[%d] recv success.", connfd);
+                fswDebug("connfd[%d] recv success.", conn.get_fd());
                 
                 buf[ret] = 0;
-                fswDebug("connfd[%d] send.", connfd);
+                fswDebug("connfd[%d] send.", conn.get_fd());
                 ret = conn.send(buf, sizeof(buf) - 1);
                 if (ret < 0)
                 {
                     fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
                 }
-                fswDebug("connfd[%d] send success.", connfd);
+                fswDebug("connfd[%d] send success.", conn.get_fd());
                 conn.close();
             }, (void *)&conn);
         }
