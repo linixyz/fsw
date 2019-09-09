@@ -74,7 +74,12 @@ ssize_t Socket::send(const void *buf, size_t len)
 
 int Socket::close()
 {
-    return fswSocket_close(sockfd);
+    int ret = fswSocket_close(sockfd);
+    if (ret > 0)
+    {
+        (FswG.poll->event_num)--;
+    }
+    return ret;
 }
 
 bool Socket::wait_event(int event)
@@ -95,6 +100,7 @@ bool Socket::wait_event(int event)
     ev->events = event == FSW_EVENT_READ ? EPOLLIN : EPOLLOUT;
     ev->data.u64 = touint64(sockfd, id);
     epoll_ctl(FswG.poll->epollfd, EPOLL_CTL_ADD, sockfd, ev);
+    (FswG.poll->event_num)++;
 
     co->yield();
     return true;

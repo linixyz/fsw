@@ -48,11 +48,13 @@ typedef struct
 {
     int epollfd;
     int ncap;
+    int event_num;
     struct epoll_event *events;
 } fswPoll_t;
 
 typedef struct
 {
+    int running;
     fswPoll_t *poll;
 } fswGlobal_t;
 

@@ -24,12 +24,14 @@ int init_fswPoll()
     {
         fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
         free(FswG.poll);
+        FswG.poll = NULL;
         return -1;
     }
 
     FswG.poll->ncap = FSW_EPOLL_CAP;
     size = sizeof(struct epoll_event) * FswG.poll->ncap;
     FswG.poll->events = (struct epoll_event *) malloc(size);
+    FswG.poll->event_num = 0;
     memset(FswG.poll->events, 0, size);
 
     return 0;
@@ -37,8 +39,14 @@ int init_fswPoll()
 
 inline int free_fswPoll()
 {
+    if (close(FswG.poll->epollfd) < 0)
+    {
+        fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+    }
     free(FswG.poll->events);
+    FswG.poll->events = NULL;
     free(FswG.poll);
+    FswG.poll = NULL;
     return 0;
 }
 
@@ -48,6 +56,8 @@ int fsw_event_init()
     {
         init_fswPoll();
     }
+
+    FswG.running = 1;
 
     return 0;
 }
@@ -66,12 +76,9 @@ int fsw_event_wait()
 {
     uv_loop_t *loop = uv_default_loop();
 
-    if (!FswG.poll)
-    {
-        fswError("Need to call fsw_event_init first.");
-    }
+    fsw_event_init();
 
-    while (loop->stop_flag == 0)
+    while (FswG.running > 0)
     {
         int n;
         int timeout;
@@ -96,9 +103,9 @@ int fsw_event_wait()
         loop->time = uv__hrtime(UV_CLOCK_FAST) / 1000000;
         uv__run_timers(loop);
 
-        if (uv__next_timeout(loop) < 0 && !FswG.poll)
+        if (uv__next_timeout(loop) < 0 && FswG.poll->event_num == 0)
         {
-            uv_stop(loop);
+            FswG.running = 0;
         }
     }
 
