@@ -74,12 +74,7 @@ ssize_t Socket::send(const void *buf, size_t len)
 
 int Socket::close()
 {
-    int ret = fswSocket_close(sockfd);
-    if (ret > 0)
-    {
-        (FswG.poll->event_num)--;
-    }
-    return ret;
+    return fswSocket_close(sockfd);
 }
 
 bool Socket::wait_event(int event)
