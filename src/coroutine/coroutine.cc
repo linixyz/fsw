@@ -66,11 +66,13 @@ int Coroutine::sleep(double seconds)
     Coroutine *co = Coroutine::get_current();
     fswTrace("coroutine[%ld] sleep", co->cid);
 
-    uv_timer_t timer;
-    timer.data = co;
-    uv_timer_init(uv_default_loop(), &timer);
-    uv_timer_start(&timer, sleep_timeout, seconds * 1000, 0);
+    uv_timer_t *timer = new uv_timer_t();
+    timer->data = co;
+    uv_timer_init(uv_default_loop(), timer);
+    uv_timer_start(timer, sleep_timeout, seconds * 1000, 0);
    
     co->yield();
+    delete timer;
+    timer = nullptr;
     return 0;
 }
