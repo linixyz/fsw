@@ -88,7 +88,8 @@ int fsw_event_wait()
         events = FswG.poll->events;
         n = epoll_wait(FswG.poll->epollfd, events, FswG.poll->ncap, timeout);
         
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++)
+        {
             int fd;
             int id;
             struct epoll_event *p = &events[i];

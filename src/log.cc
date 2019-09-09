@@ -13,7 +13,8 @@ void fswLog_put(int level, char *cnt)
     time_t t;
     struct tm *p;
 
-    switch (level) {
+    switch (level)
+    {
         case FSW_LOG_DEBUG:
             level_str = "DEBUG";
             break;
@@ -39,7 +40,8 @@ void fswLog_put(int level, char *cnt)
     snprintf(date_str, FSW_LOG_DATE_STRLEN, "%d-%02d-%02d %02d:%02d:%02d", p->tm_year + 1900, p->tm_mon + 1, p->tm_mday, p->tm_hour, p->tm_min, p->tm_sec);
 
     n = snprintf(log_str, FSW_LOG_BUFFER_SIZE, "[%s]\t%s\t%s\n", date_str, level_str, cnt);
-    if (write(STDOUT_FILENO, log_str, n) < 0) {
+    if (write(STDOUT_FILENO, log_str, n) < 0)
+    {
         printf("write(log_fd, size=%d) failed. Error: %s[%d].\n", n, strerror(errno), errno);
     }
 }
