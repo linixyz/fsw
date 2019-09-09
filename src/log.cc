@@ -1,6 +1,7 @@
 #include "log.h"
 
 char fsw_debug[FSW_DEBUG_MSG_SIZE];
+char fsw_trace[FSW_TRACE_MSG_SIZE];
 char fsw_warn[FSW_WARN_MSG_SIZE];
 char fsw_error[FSW_ERROR_MSG_SIZE];
 

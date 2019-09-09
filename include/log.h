@@ -11,10 +11,12 @@
 #define FSW_LOG_DATE_STRLEN  64
 
 #define FSW_DEBUG_MSG_SIZE 512
+#define FSW_TRACE_MSG_SIZE 512
 #define FSW_WARN_MSG_SIZE 512
 #define FSW_ERROR_MSG_SIZE 512
 
 extern char fsw_debug[FSW_DEBUG_MSG_SIZE];
+extern char fsw_trace[FSW_TRACE_MSG_SIZE];
 extern char fsw_warn[FSW_WARN_MSG_SIZE];
 extern char fsw_error[FSW_ERROR_MSG_SIZE];
 
@@ -24,6 +26,14 @@ extern char fsw_error[FSW_ERROR_MSG_SIZE];
     fswLog_put(FSW_LOG_DEBUG, fsw_debug);
 #else
 #define fswDebug(str,...)
+#endif
+
+#if FSW_TRACE
+#define fswTrace(str, ...)                                                         \
+    snprintf(fsw_trace, FSW_TRACE_MSG_SIZE, str, ##__VA_ARGS__); \
+    fswLog_put(FSW_LOG_TRACE, fsw_trace);
+#else
+#define fswTrace(str,...)
 #endif
 
 #define fswWarn(str, ...)                                                         \

@@ -45,22 +45,22 @@ int main(int argc, char const *argv[])
 
                 Socket conn = *(Socket *)_sock;
 
-                fswDebug("connfd[%d] recv.", conn.get_fd());
+                fswTrace("connfd[%d] recv.", conn.get_fd());
                 ret = conn.recv(buf, sizeof(buf) - 1);
                 if (ret < 0)
                 {
                     fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
                 }
-                fswDebug("connfd[%d] recv success.", conn.get_fd());
+                fswTrace("connfd[%d] recv success.", conn.get_fd());
                 
                 buf[ret] = 0;
-                fswDebug("connfd[%d] send.", conn.get_fd());
+                fswTrace("connfd[%d] send.", conn.get_fd());
                 ret = conn.send(buf, sizeof(buf) - 1);
                 if (ret < 0)
                 {
                     fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
                 }
-                fswDebug("connfd[%d] send success.", conn.get_fd());
+                fswTrace("connfd[%d] send success.", conn.get_fd());
                 conn.close();
             }, (void *)&conn);
         }

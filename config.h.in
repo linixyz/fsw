@@ -1,4 +1,5 @@
 #pragma once
 
 #define FSW_DEBUG ${ENABLE_DEBUGGER}
+#define FSW_TRACE ${ENABLE_TRACE}
 #cmakedefine HAVE_EPOLL
