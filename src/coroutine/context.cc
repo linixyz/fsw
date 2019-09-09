@@ -1,5 +1,6 @@
 #include "context.h"
 #include "fsw.h"
+#include "log.h"
 
 using namespace fsw;
 
@@ -8,7 +9,14 @@ Context::Context(size_t stack_size, coroutine_func_t fn, void* private_data) :
 {
     swap_ctx_ = nullptr;
 
-    stack_ = (char*) malloc(stack_size_);
+    try
+    {
+        stack_ = new char[stack_size_];
+    }
+    catch(const std::bad_alloc& e)
+    {
+        fswError("%s", e.what());
+    }
     
     void* sp = (void*) ((char*) stack_ + stack_size_);
     ctx_ = make_fcontext(sp, stack_size_, (void (*)(intptr_t))&context_func);

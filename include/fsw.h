@@ -36,6 +36,8 @@
 #include <sys/utsname.h>
 #include <sys/stat.h>
 
+#include <new>
+
 #include "config.h"
 
 #ifdef HAVE_EPOLL

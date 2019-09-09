@@ -9,30 +9,35 @@ fswGlobal_t FswG;
 
 int init_fswPoll()
 {
-    size_t size;
-
-    FswG.poll = (fswPoll_t *)malloc(sizeof(fswPoll_t));
-
-    if (FswG.poll == NULL)
+    try
     {
-        fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
-        return -1;
+        FswG.poll = new fswPoll_t();
+    }
+    catch(const std::bad_alloc& e)
+    {
+        fswError("%s", e.what());
     }
 
     FswG.poll->epollfd = epoll_create(256);
     if (FswG.poll->epollfd  < 0)
     {
         fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
-        free(FswG.poll);
-        FswG.poll = NULL;
+        delete FswG.poll;
+        FswG.poll = nullptr;
         return -1;
     }
 
     FswG.poll->ncap = FSW_EPOLL_CAP;
-    size = sizeof(struct epoll_event) * FswG.poll->ncap;
-    FswG.poll->events = (struct epoll_event *) malloc(size);
+    try
+    {
+        FswG.poll->events = new epoll_event[FswG.poll->ncap](); // zero initialized
+    }
+    catch(const std::bad_alloc& e)
+    {
+        fswError("%s", e.what());
+    }
+    
     FswG.poll->event_num = 0;
-    memset(FswG.poll->events, 0, size);
 
     return 0;
 }
@@ -43,10 +48,10 @@ inline int free_fswPoll()
     {
         fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
     }
-    free(FswG.poll->events);
-    FswG.poll->events = NULL;
-    free(FswG.poll);
-    FswG.poll = NULL;
+    delete FswG.poll->events;
+    FswG.poll->events = nullptr;
+    delete FswG.poll;
+    FswG.poll = nullptr;
     return 0;
 }
 
@@ -117,6 +122,7 @@ int fsw_event_wait()
 
 int fsw_event_free()
 {
+    FswG.running = 0;
     free_fswPoll();
     return 0;
 }
