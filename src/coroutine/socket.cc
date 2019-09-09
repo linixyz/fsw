@@ -94,6 +94,8 @@ bool Socket::wait_event(int event)
 
     ev->events = event == FSW_EVENT_READ ? EPOLLIN : EPOLLOUT;
     ev->data.u64 = touint64(sockfd, id);
+
+    fswTrace("add sockfd[%d] %s event", sockfd, "EPOLL_CTL_ADD");
     if (epoll_ctl(FswG.poll->epollfd, EPOLL_CTL_ADD, sockfd, ev) < 0)
     {
         fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
@@ -102,6 +104,8 @@ bool Socket::wait_event(int event)
     (FswG.poll->event_num)++;
 
     co->yield();
+
+    fswTrace("remove sockfd[%d] %s event", sockfd, "EPOLL_CTL_DEL");
 
     if (epoll_ctl(FswG.poll->epollfd, EPOLL_CTL_DEL, sockfd, NULL) < 0)
     {

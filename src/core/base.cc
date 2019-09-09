@@ -102,6 +102,7 @@ int fsw_event_wait()
             Coroutine *co;
 
             fromuint64(u64, &fd, &id);
+            fswTrace("coroutine[%d] resume", id);
             co = Coroutine::get_by_cid(id);
             co->resume();
         }

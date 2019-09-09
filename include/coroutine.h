@@ -1,10 +1,11 @@
 #ifndef COROUTINE_H
 #define COROUTINE_H
 
+#include <unordered_map>
 #include "context.h"
 #include "uv.h"
 #include "fsw.h"
-#include <unordered_map>
+#include "log.h"
 
 #define DEFAULT_C_STACK_SIZE          (2 *1024 * 1024)
 
@@ -59,6 +60,7 @@ protected:
         ctx.swap_in();
         if (ctx.is_end())
         {
+            fswTrace("coroutine[%ld] end", cid);
             current = origin;
             coroutines.erase(cid);
             delete this;

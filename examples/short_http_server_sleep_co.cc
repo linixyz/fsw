@@ -33,8 +33,10 @@ int main(int argc, char const *argv[])
     
         while (true)
         {
-            int connfd = sock.accept();
+            fswTrace("coroutine[%ld] try accept", Coroutine::get_current()->get_cid());
+            fswTrace("coroutine[%ld] accept success", Coroutine::get_current()->get_cid());
 
+            int connfd = sock.accept();
             Socket conn(connfd);
 
             Coroutine::create([](void *_sock)

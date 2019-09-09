@@ -1,4 +1,5 @@
 #include "coroutine.h"
+#include "log.h"
 
 using fsw::Coroutine;
 
@@ -34,17 +35,20 @@ long Coroutine::create(coroutine_func_t fn, void* args)
 
 void Coroutine::yield()
 {
+    fswTrace("coroutine[%ld] yield", cid);
     current = origin;
     ctx.swap_out();
 }
 
 void Coroutine::resume()
 {
+    fswTrace("coroutine[%ld] resume", cid);
     origin = current;
     current = this;
     ctx.swap_in();
     if (ctx.is_end())
     {
+        fswTrace("coroutine[%ld] end", cid);
         current = origin;
         coroutines.erase(cid);
         delete this;
@@ -53,12 +57,14 @@ void Coroutine::resume()
 
 static void sleep_timeout(uv_timer_t *timer)
 {
+    fswTrace("coroutine[%ld] sleep timeout", ((Coroutine *) timer->data)->get_cid());
     ((Coroutine *) timer->data)->resume();
 }
 
 int Coroutine::sleep(double seconds)
 {
     Coroutine *co = Coroutine::get_current();
+    fswTrace("coroutine[%ld] sleep", co->cid);
 
     uv_timer_t timer;
     timer.data = co;
