@@ -99,9 +99,20 @@ bool Socket::wait_event(int event)
 
     ev->events = event == FSW_EVENT_READ ? EPOLLIN : EPOLLOUT;
     ev->data.u64 = touint64(sockfd, id);
-    epoll_ctl(FswG.poll->epollfd, EPOLL_CTL_ADD, sockfd, ev);
+    if (epoll_ctl(FswG.poll->epollfd, EPOLL_CTL_ADD, sockfd, ev) < 0)
+    {
+        fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+        return false;
+    }
     (FswG.poll->event_num)++;
 
     co->yield();
+
+    if (epoll_ctl(FswG.poll->epollfd, EPOLL_CTL_DEL, sockfd, NULL) < 0)
+    {
+        fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+        return false;
+    }
+
     return true;
 }

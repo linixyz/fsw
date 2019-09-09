@@ -39,6 +39,7 @@ int main(int argc, char const *argv[])
 
             Coroutine::create([](void *_sock)
             {
+                Coroutine::sleep(0.001);
                 int ret;
                 char buf[1024] = {0};
 
