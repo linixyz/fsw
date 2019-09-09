@@ -22,7 +22,7 @@ extern char fsw_error[FSW_ERROR_MSG_SIZE];
 
 #if FSW_DEBUG
 #define fswDebug(str, ...)                                                         \
-    snprintf(fsw_debug, FSW_DEBUG_MSG_SIZE, str, ##__VA_ARGS__); \
+    snprintf(fsw_debug, FSW_DEBUG_MSG_SIZE, "%s: " str " in %s on line %d.", __func__, ##__VA_ARGS__, __FILE__, __LINE__); \
     fswLog_put(FSW_LOG_DEBUG, fsw_debug);
 #else
 #define fswDebug(str,...)
@@ -30,7 +30,7 @@ extern char fsw_error[FSW_ERROR_MSG_SIZE];
 
 #if FSW_TRACE
 #define fswTrace(str, ...)                                                         \
-    snprintf(fsw_trace, FSW_TRACE_MSG_SIZE, str, ##__VA_ARGS__); \
+    snprintf(fsw_trace, FSW_TRACE_MSG_SIZE, "%s: " str " in %s on line %d.", __func__, ##__VA_ARGS__, __FILE__, __LINE__); \
     fswLog_put(FSW_LOG_TRACE, fsw_trace);
 #else
 #define fswTrace(str,...)
