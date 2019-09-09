@@ -28,42 +28,50 @@ int main(int argc, char const *argv[])
         char ip[] = "127.0.0.1";
 
         Socket sock(AF_INET, SOCK_STREAM, 0);
-        sock.bind(FSW_SOCK_TCP, ip, port);
+        if (sock.bind(FSW_SOCK_TCP, ip, port) < 0)
+        {
+            fswError("Error has occurred: (errno %d) %s", errno, strerror(errno));
+        }
         sock.listen();
     
         while (true)
         {
-            fswTrace("coroutine[%ld] try accept", Coroutine::get_current()->get_cid());
             int connfd = sock.accept();
-            fswTrace("coroutine[%ld] accept success", Coroutine::get_current()->get_cid());
-            Socket conn(connfd);
+            Socket *conn = new Socket(connfd); // Notice: need to allocate memory on the heap, otherwise the address will be the same
 
             Coroutine::create([](void *_sock)
             {
+                fswTrace("coroutine[%ld] -> %p", Coroutine::get_current()->get_cid(), _sock);
                 Coroutine::sleep(0.001);
+                fswTrace("coroutine[%ld] -> %p", Coroutine::get_current()->get_cid(), _sock);
+
                 int ret;
                 char buf[1024] = {0};
 
-                Socket conn = *(Socket *)_sock;
+                Socket *conn = (Socket *)_sock;
 
-                fswTrace("connfd[%d] recv.", conn.get_fd());
-                ret = conn.recv(buf, sizeof(buf) - 1);
+                fswTrace("coroutine[%ld] manage connfd[%d]", Coroutine::get_current()->get_cid(), conn->get_fd());
+                fswTrace("connfd[%d] try recv.", conn->get_fd());
+                ret = conn->recv(buf, sizeof(buf) - 1);
                 if (ret < 0)
                 {
-                    fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+                    fswError("Error has occurred: (errno %d) %s", errno, strerror(errno));
                 }
-                fswTrace("connfd[%d] recv success.", conn.get_fd());
+                fswTrace("connfd[%d] recv success.", conn->get_fd());
                 
                 buf[ret] = 0;
-                fswTrace("connfd[%d] send.", conn.get_fd());
-                ret = conn.send(buf, sizeof(buf) - 1);
+                fswTrace("connfd[%d] try send.", conn->get_fd());
+                ret = conn->send(buf, sizeof(buf) - 1);
                 if (ret < 0)
                 {
-                    fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+                    fswError("Error has occurred: (errno %d) %s", errno, strerror(errno));
                 }
-                fswTrace("connfd[%d] send success.", conn.get_fd());
-                conn.close();
-            }, (void *)&conn);
+                fswTrace("connfd[%d] send success.", conn->get_fd());
+                conn->close();
+                delete conn;
+                conn = nullptr;
+                fswTrace("connfd[%d] close success.", conn->get_fd());
+            }, (void *)conn);
         }
     }, &param);
 
