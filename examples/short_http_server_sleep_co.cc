@@ -68,9 +68,9 @@ int main(int argc, char const *argv[])
                 }
                 fswTrace("connfd[%d] send success.", conn->get_fd());
                 conn->close();
+                fswTrace("connfd[%d] close success.", conn->get_fd());
                 delete conn;
                 conn = nullptr;
-                fswTrace("connfd[%d] close success.", conn->get_fd());
             }, (void *)conn);
         }
     }, &param);
