@@ -63,10 +63,19 @@ static void sleep_timeout(uv_timer_t *timer)
 
 int Coroutine::sleep(double seconds)
 {
+    uv_timer_t *timer;
     Coroutine *co = Coroutine::get_current();
     fswTrace("coroutine[%ld] sleep", co->cid);
 
-    uv_timer_t *timer = new uv_timer_t();
+    try
+    {
+        timer = new uv_timer_t();
+    }
+    catch(const std::bad_alloc& e)
+    {
+        fswError("%s", e.what());
+    }
+    
     timer->data = co;
     uv_timer_init(uv_default_loop(), timer);
     uv_timer_start(timer, sleep_timeout, seconds * 1000, 0);
