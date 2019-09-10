@@ -88,11 +88,9 @@ int Coroutine::sleep(double seconds)
     timer->data = co;
     uv_timer_init(uv_default_loop(), timer);
     uv_timer_start(timer, sleep_timeout, seconds * 1000, 0);
-    uv_run(uv_default_loop(), UV_RUN_DEFAULT);
    
     co->yield();
     fswTrace("coroutine[%ld] free timer[%p]", co->get_cid(), timer);
-    uv_timer_stop(timer);
     uv_close((uv_handle_t *)timer, fsw_timer_close);
     return 0;
 }
