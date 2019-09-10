@@ -26,8 +26,8 @@ Context::~Context()
 {
     if (swap_ctx_)
     {
-        free(stack_);
-        stack_ = NULL;
+        delete stack_;
+        stack_ = nullptr;
     }
 }
 
