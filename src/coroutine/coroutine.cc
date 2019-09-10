@@ -63,6 +63,12 @@ static void sleep_timeout(uv_timer_t *timer)
     ((Coroutine *) timer->data)->resume();
 }
 
+static void fsw_timer_close(uv_handle_t *handle)
+{
+	delete handle;
+    handle = nullptr;
+}
+
 int Coroutine::sleep(double seconds)
 {
     uv_timer_t *timer;
@@ -72,6 +78,7 @@ int Coroutine::sleep(double seconds)
     try
     {
         timer = new uv_timer_t();
+        fswTrace("coroutine[%ld] new timer[%p]", co->get_cid(), timer);
     }
     catch(const std::bad_alloc& e)
     {
@@ -81,9 +88,11 @@ int Coroutine::sleep(double seconds)
     timer->data = co;
     uv_timer_init(uv_default_loop(), timer);
     uv_timer_start(timer, sleep_timeout, seconds * 1000, 0);
+    uv_run(uv_default_loop(), UV_RUN_DEFAULT);
    
     co->yield();
-    delete timer;
-    timer = nullptr;
+    fswTrace("coroutine[%ld] free timer[%p]", co->get_cid(), timer);
+    uv_timer_stop(timer);
+    uv_close((uv_handle_t *)timer, fsw_timer_close);
     return 0;
 }
