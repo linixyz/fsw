@@ -48,7 +48,7 @@ inline int free_fswPoll()
     {
         fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
     }
-    delete FswG.poll->events;
+    delete[] FswG.poll->events;
     FswG.poll->events = nullptr;
     delete FswG.poll;
     FswG.poll = nullptr;
