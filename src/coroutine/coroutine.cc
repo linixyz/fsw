@@ -35,6 +35,7 @@ long Coroutine::create(coroutine_func_t fn, void* args)
 
 void Coroutine::yield()
 {
+    assert(current == this);
     fswTrace("coroutine[%ld] yield", cid);
     current = origin;
     ctx.swap_out();
@@ -42,6 +43,7 @@ void Coroutine::yield()
 
 void Coroutine::resume()
 {
+    assert(current != this);
     fswTrace("coroutine[%ld] resume", cid);
     origin = current;
     current = this;
