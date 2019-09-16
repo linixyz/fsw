@@ -3,11 +3,14 @@
 using fsw::Timer;
 using fsw::TimerManager;
 
+const uint64_t Timer::MILLI_SECOND = 1;
+const uint64_t Timer::SECOND = 1000;
+
 uint64_t Timer::get_current_ms()
 {
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    return tv.tv_sec + tv.tv_usec / 1000;
+    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
 Timer::Timer(uint64_t _timeout, timer_func_t _callback, void *_private_data, TimerManager *_timer_manager):

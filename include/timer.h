@@ -14,6 +14,8 @@ class Timer
 friend class TimerManager;
 friend class Compare_Timer_Pointer;
 public:
+    static const uint64_t MILLI_SECOND;
+    static const uint64_t SECOND;
     Timer(uint64_t _timeout, timer_func_t _callback, void *_private_data, TimerManager *_timer_manager);
     static uint64_t get_current_ms();
     friend bool operator <(const Timer& t1, const Timer& t2) 
