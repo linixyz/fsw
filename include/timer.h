@@ -46,6 +46,7 @@ public:
     TimerManager();
     ~TimerManager();
     void add_timer(int64_t _timeout, timer_func_t _callback, void *_private_data);
+    int64_t get_next_timeout();
     void run_timers();
 private:
     std::priority_queue<Timer*, std::vector<Timer*>, Compare_Timer_Pointer> timers;

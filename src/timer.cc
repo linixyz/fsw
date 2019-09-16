@@ -33,6 +33,16 @@ void TimerManager::add_timer(int64_t _timeout, timer_func_t _callback, void *_pr
     timers.push(timer);
 }
 
+int64_t TimerManager::get_next_timeout()
+{
+    if (timers.empty())
+    {
+        return -1;
+    }
+    Timer *t = timers.top();
+    return t->exec_msec;
+}
+
 void TimerManager::run_timers()
 {
     uint64_t now = Timer::get_current_ms();

@@ -16,9 +16,9 @@ int main(int argc, char const *argv[])
     timer_manager.add_timer(1 * Timer::SECOND, print_num, (void*)(uintptr_t)1);
     timer_manager.add_timer(2 * Timer::SECOND, print_num, (void*)(uintptr_t)2);
     timer_manager.add_timer(3 * Timer::SECOND, print_num, (void*)(uintptr_t)3);
-    timer_manager.add_timer(10 * Timer::SECOND, print_num, (void*)(uintptr_t)10);
+    timer_manager.add_timer(4 * Timer::SECOND, print_num, (void*)(uintptr_t)4);
 
-    while (true)
+    while (timer_manager.get_next_timeout() > 0)
     {
         timer_manager.run_timers();
     }
