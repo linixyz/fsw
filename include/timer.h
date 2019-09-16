@@ -18,10 +18,6 @@ public:
     static const uint64_t SECOND;
     Timer(uint64_t _timeout, timer_func_t _callback, void *_private_data, TimerManager *_timer_manager);
     static uint64_t get_current_ms();
-    friend bool operator <(const Timer& t1, const Timer& t2) 
-    {
-        return t1.exec_msec > t2.exec_msec; 
-    }
     
 private:
     uint64_t timeout = 0;
