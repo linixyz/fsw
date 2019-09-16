@@ -12,7 +12,7 @@ class TimerManager;
 class Timer
 {
 friend class TimerManager;
-friend class Compare_Timer_Pointer;
+friend class CompareTimerPointer;
 public:
     static const uint64_t MILLI_SECOND;
     static const uint64_t SECOND;
@@ -31,7 +31,7 @@ private:
     TimerManager *timer_manager = nullptr;
 };
 
-class Compare_Timer_Pointer
+class CompareTimerPointer
 {
 public:
     bool operator () (Timer* &timer1, Timer* &timer2) const
@@ -49,7 +49,7 @@ public:
     int64_t get_next_timeout();
     void run_timers();
 private:
-    std::priority_queue<Timer*, std::vector<Timer*>, Compare_Timer_Pointer> timers;
+    std::priority_queue<Timer*, std::vector<Timer*>, CompareTimerPointer> timers;
 };
 }
 
