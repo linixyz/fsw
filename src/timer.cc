@@ -3,6 +3,8 @@
 using fsw::Timer;
 using fsw::TimerManager;
 
+TimerManager fsw::timer_manager;
+
 const uint64_t Timer::MILLI_SECOND = 1;
 const uint64_t Timer::SECOND = 1000;
 
@@ -35,29 +37,34 @@ void TimerManager::add_timer(int64_t _timeout, timer_func_t _callback, void *_pr
 
 int64_t TimerManager::get_next_timeout()
 {
+    int64_t diff;
+
     if (timers.empty())
     {
         return -1;
     }
     Timer *t = timers.top();
-    return t->exec_msec;
+
+    diff = t->exec_msec - Timer::get_current_ms();
+    return diff < 0 ? 0 : diff;
 }
 
 void TimerManager::run_timers()
 {
     uint64_t now = Timer::get_current_ms();
-    if (!timers.empty())
+    while (true)
     {
-        while (true)
+        if (timers.empty())
         {
-            Timer *t = timers.top();
-            if (now < t->exec_msec)
-            {
-                break;
-            }
-            timers.pop();
-            t->callback(t->private_data);
-            delete t;
+            break;
         }
+        Timer *t = timers.top();
+        if (now < t->exec_msec)
+        {
+            break;
+        }
+        timers.pop();
+        t->callback(t->private_data);
+        delete t;
     }
 }

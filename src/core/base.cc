@@ -2,8 +2,12 @@
 #include "uv.h"
 #include "coroutine.h"
 #include "log.h"
+#include "timer.h"
 
 using fsw::Coroutine;
+using fsw::Timer;
+using fsw::TimerManager;
+using fsw::timer_manager;
 
 fswGlobal_t FswG;
 
@@ -79,17 +83,15 @@ extern "C" int uv__next_timeout(const uv_loop_t* loop);
 
 int fsw_event_wait()
 {
-    uv_loop_t *loop = uv_default_loop();
-
     fsw_event_init();
 
     while (FswG.running > 0)
     {
         int n;
-        int timeout;
+        int64_t timeout;
         epoll_event *events;
 
-        timeout = uv__next_timeout(loop);
+        timeout = timer_manager.get_next_timeout();
         events = FswG.poll->events;
         n = epoll_wait(FswG.poll->epollfd, events, FswG.poll->ncap, timeout);
         
@@ -107,10 +109,8 @@ int fsw_event_wait()
             co->resume();
         }
 
-        loop->time = uv__hrtime(UV_CLOCK_FAST) / 1000000;
-        uv__run_timers(loop);
-
-        if (uv__next_timeout(loop) < 0 && FswG.poll->event_num == 0)
+        timer_manager.run_timers();
+        if (timer_manager.get_next_timeout() < 0 && FswG.poll->event_num == 0)
         {
             FswG.running = 0;
         }

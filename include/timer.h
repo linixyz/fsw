@@ -47,6 +47,8 @@ public:
 private:
     std::priority_queue<Timer*, std::vector<Timer*>, CompareTimerPointer> timers;
 };
+
+extern TimerManager timer_manager;
 }
 
 #endif	/* TIMER_H */
