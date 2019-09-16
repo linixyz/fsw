@@ -37,6 +37,11 @@
 #include <sys/stat.h>
 
 #include <new>
+#include <functional>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <iostream>
 
 #include "config.h"
 
