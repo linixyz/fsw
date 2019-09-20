@@ -14,7 +14,7 @@ public:
         POP = 2,
     };
 
-    Channel();
+    Channel(size_t _capacity);
     ~Channel();
     void* pop(double timeout = -1);
     bool push(void *data, double timeout = -1);
