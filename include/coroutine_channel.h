@@ -10,8 +10,8 @@ class Channel
 public:
     enum opcode
     {
-        PRODUCER = 1,
-        CONSUMER = 2,
+        PUSH = 1,
+        POP = 2,
     };
 
     Channel();
