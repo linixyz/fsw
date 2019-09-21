@@ -22,8 +22,8 @@ public:
 protected:
     size_t capacity = 1;
     bool closed = false;
-    std::list<Coroutine*> producer_queue;
-    std::list<Coroutine*> consumer_queue;
+    std::queue<Coroutine*> producer_queue;
+    std::queue<Coroutine*> consumer_queue;
     std::queue<void*> data_queue;
 };
 }
