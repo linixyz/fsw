@@ -83,6 +83,11 @@ int fsw_event_wait()
 
         timeout = timer_manager.get_next_timeout();
         events = FswG.poll->events;
+        if (timeout < 0 && FswG.poll->event_num == 0)
+        {
+            FswG.running = 0;
+            break;
+        }
         n = epoll_wait(FswG.poll->epollfd, events, FswG.poll->ncap, timeout);
         
         for (int i = 0; i < n; i++)
@@ -100,10 +105,6 @@ int fsw_event_wait()
         }
 
         timer_manager.run_timers();
-        if (timer_manager.get_next_timeout() < 0 && FswG.poll->event_num == 0)
-        {
-            FswG.running = 0;
-        }
     }
 
     fsw_event_free();
