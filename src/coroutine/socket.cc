@@ -36,7 +36,7 @@ int Socket::listen()
     return fswSocket_listen(sockfd);
 }
 
-int Socket::accept()
+Socket* Socket::accept()
 {
     int connfd;
 
@@ -45,7 +45,7 @@ int Socket::accept()
         connfd = fswSocket_accept(sockfd);
     } while (connfd < 0 && errno == EAGAIN && wait_event(FSW_EVENT_READ));
 
-    return connfd;
+    return (new Socket(connfd));
 }
 
 ssize_t Socket::recv(void *buf, size_t len)

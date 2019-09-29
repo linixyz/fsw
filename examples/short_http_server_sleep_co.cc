@@ -36,8 +36,7 @@ int main(int argc, char const *argv[])
     
         while (true)
         {
-            int connfd = sock.accept();
-            Socket *conn = new Socket(connfd); // Notice: need to allocate memory on the heap, otherwise the address will be the same
+            Socket *conn = sock.accept(); // Notice: need to allocate memory on the heap, otherwise the address will be the same
 
             Coroutine::create([](void *_sock)
             {
@@ -70,7 +69,6 @@ int main(int argc, char const *argv[])
                 conn->close();
                 fswTrace("connfd[%d] close success.", conn->get_fd());
                 delete conn;
-                conn = nullptr;
             }, (void *)conn);
         }
     }, &param);

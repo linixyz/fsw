@@ -14,7 +14,7 @@ public:
     ~Socket();
     int bind(int type, char *host, int port);
     int listen();
-    int accept();
+    Socket* accept();
     ssize_t recv(void *buf, size_t len);
     ssize_t send(const void *buf, size_t len);
     int close();
