@@ -1,5 +1,4 @@
 #include "fsw.h"
-#include "uv.h"
 #include "coroutine.h"
 #include "log.h"
 #include "timer.h"

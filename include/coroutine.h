@@ -3,7 +3,6 @@
 
 #include <unordered_map>
 #include "context.h"
-#include "uv.h"
 #include "fsw.h"
 #include "log.h"
 
