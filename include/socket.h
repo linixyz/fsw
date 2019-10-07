@@ -11,7 +11,7 @@ enum fswSocket_type
 
 int fswSocket_create(int domain, int type, int protocol);
 int fswSocket_bind(int sock, int type, char *host, int port);
-int fswSocket_listen(int sock);
+int fswSocket_listen(int sock, int backlog);
 int fswSocket_accept(int sock);
 int fswSocket_close(int fd);
 

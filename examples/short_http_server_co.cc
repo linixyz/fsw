@@ -29,7 +29,7 @@ int main(int argc, char const *argv[])
 
         Socket sock(AF_INET, SOCK_STREAM, 0);
         sock.bind(FSW_SOCK_TCP, ip, port);
-        sock.listen();
+        sock.listen(512);
     
         while (true)
         {

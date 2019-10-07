@@ -32,7 +32,7 @@ int main(int argc, char const *argv[])
         {
             fswError("Error has occurred: (errno %d) %s", errno, strerror(errno));
         }
-        sock.listen();
+        sock.listen(512);
     
         while (true)
         {

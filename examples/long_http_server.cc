@@ -16,7 +16,7 @@ int main(int argc, char const *argv[])
 
     sock = fswSocket_create(AF_INET, SOCK_STREAM, 0);
     fswSocket_bind(sock, FSW_SOCK_TCP, ip, 80);
-    fswSocket_listen(sock);
+    fswSocket_listen(sock, 512);
 
     while (true)
     {

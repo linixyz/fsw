@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
         fswWarn("fswSocket_bind error");
         return -1;
     }
-    if (fswSocket_listen(sock) < 0)
+    if (fswSocket_listen(sock, 512) < 0)
     {
         fswWarn("fswSocket_listen error");
         return -1;

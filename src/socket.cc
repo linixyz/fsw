@@ -73,11 +73,11 @@ int fswSocket_close(int fd)
     return ret;
 }
 
-int fswSocket_listen(int sock)
+int fswSocket_listen(int sock, int backlog)
 {
     int ret;
 
-    ret = listen(sock, 512);
+    ret = listen(sock, backlog);
     if (ret < 0)
     {
         fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));

@@ -31,9 +31,9 @@ int Socket::bind(int type, char *host, int port)
     return fswSocket_bind(sockfd, type, host, port);
 }
 
-int Socket::listen()
+int Socket::listen(int backlog)
 {
-    return fswSocket_listen(sockfd);
+    return fswSocket_listen(sockfd, backlog);
 }
 
 Socket* Socket::accept()
