@@ -12,14 +12,13 @@ class Server
 private:
     Socket *socket;
     handle_func_t handler;
-    void* handler_args;
-
+    
 public:
     Server(char *host, int port);
     ~Server();
     bool start();
     bool shutdown();
-    void handle(handle_func_t fn, void* args = nullptr);
+    void handle(handle_func_t fn);
 };
 }
 }

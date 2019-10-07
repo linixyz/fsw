@@ -35,7 +35,7 @@ bool Server::start()
             return false;
         }
 
-        Coroutine::create(handler, handler_args);
+        Coroutine::create(handler, (void *)conn);
     }
     return true;
 }
@@ -45,8 +45,7 @@ bool Server::shutdown()
     return true;
 }
 
-void Server::handle(handle_func_t fn, void* args)
+void Server::handle(handle_func_t fn)
 {
     handler = fn;
-    handler_args = args;
 }
