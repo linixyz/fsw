@@ -11,6 +11,9 @@ class Server
 {
 private:
     Socket *socket;
+    handle_func_t handler;
+    void* handler_args;
+
 public:
     Server(char *host, int port);
     ~Server();

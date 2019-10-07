@@ -1,1 +1,52 @@
-#include "fsw/coroutine_server.h"
+#include "coroutine_server.h"
+#include "socket.h"
+#include "log.h"
+#include "coroutine.h"
+
+using fsw::coroutine::Server;
+using fsw::coroutine::Socket;
+using fsw::Coroutine;
+
+Server::Server(char *host, int port)
+{
+    socket = new Socket(AF_INET, SOCK_STREAM, 0);
+    if (socket->bind(FSW_SOCK_TCP, host, port) < 0)
+    {
+        fswWarn("Error has occurred: (errno %d) %s", errno, strerror(errno));
+        return;
+    }
+    if (socket->listen(512) < 0)
+    {
+        return;
+    }
+}
+
+Server::~Server()
+{
+}
+
+bool Server::start()
+{
+    while (true)
+    {
+        Socket* conn = socket->accept();
+        if (!conn)
+        {
+            return false;
+        }
+
+        Coroutine::create(handler, handler_args);
+    }
+    return true;
+}
+
+bool Server::shutdown()
+{
+    return true;
+}
+
+void Server::handle(handle_func_t fn, void* args)
+{
+    handler = fn;
+    handler_args = args;
+}
