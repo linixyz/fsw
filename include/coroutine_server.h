@@ -12,6 +12,7 @@ class Server
 private:
     Socket *socket;
     handle_func_t handler;
+    bool running;
     
 public:
     Server(char *host, int port);

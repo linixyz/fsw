@@ -27,7 +27,9 @@ Server::~Server()
 
 bool Server::start()
 {
-    while (true)
+    running = true;
+
+    while (running)
     {
         Socket* conn = socket->accept();
         if (!conn)
@@ -42,6 +44,7 @@ bool Server::start()
 
 bool Server::shutdown()
 {
+    running = false;
     return true;
 }
 
