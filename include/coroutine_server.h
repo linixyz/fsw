@@ -19,7 +19,7 @@ public:
     ~Server();
     bool start();
     bool shutdown();
-    void handle(handle_func_t fn);
+    void set_handler(handle_func_t fn);
 };
 }
 }

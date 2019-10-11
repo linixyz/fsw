@@ -48,7 +48,7 @@ bool Server::shutdown()
     return true;
 }
 
-void Server::handle(handle_func_t fn)
+void Server::set_handler(handle_func_t fn)
 {
     handler = fn;
 }
