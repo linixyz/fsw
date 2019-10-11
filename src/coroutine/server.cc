@@ -52,3 +52,8 @@ void Server::set_handler(handle_func_t fn)
 {
     handler = fn;
 }
+
+handle_func_t Server::get_handler()
+{
+    return handler;
+}

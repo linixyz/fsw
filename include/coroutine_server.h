@@ -20,6 +20,7 @@ public:
     bool start();
     bool shutdown();
     void set_handler(handle_func_t fn);
+    handle_func_t get_handler();
 };
 }
 }
