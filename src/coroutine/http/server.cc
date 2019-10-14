@@ -4,7 +4,7 @@
 #include "coroutine.h"
 #include "http_parser.h"
 
-using fsw::coroutine::HttpServer;
+using fsw::coroutine::http::Server;
 using fsw::coroutine::Socket;
 using fsw::Coroutine;
 
@@ -20,7 +20,7 @@ static const http_parser_settings parser_settings =
     .on_message_complete = NULL,
 };
 
-HttpServer::HttpServer(char *host, int port)
+Server::Server(char *host, int port)
 {
     socket = new Socket(AF_INET, SOCK_STREAM, 0);
     if (socket->bind(FSW_SOCK_TCP, host, port) < 0)
@@ -34,11 +34,11 @@ HttpServer::HttpServer(char *host, int port)
     }
 }
 
-HttpServer::~HttpServer()
+Server::~Server()
 {
 }
 
-bool HttpServer::start()
+bool Server::start()
 {
     running = true;
 
@@ -56,7 +56,7 @@ bool HttpServer::start()
     return true;
 }
 
-bool HttpServer::on_accept(Socket *conn)
+bool Server::on_accept(Socket *conn)
 {
     http_parser *parser = new http_parser();
     http_parser_init(parser, HTTP_REQUEST);
@@ -75,18 +75,18 @@ bool HttpServer::on_accept(Socket *conn)
     nparsed = http_parser_execute(parser, &parser_settings, buf, recved);
 }
 
-bool HttpServer::shutdown()
+bool Server::shutdown()
 {
     running = false;
     return true;
 }
 
-void HttpServer::set_handler(string pattern, handle_func_t fn)
+void Server::set_handler(string pattern, handle_func_t fn)
 {
     handlers[pattern] = fn;
 }
 
-handle_func_t HttpServer::get_handler(string pattern)
+handle_func_t Server::get_handler(string pattern)
 {
     for (auto i = handlers.begin(); i != handlers.end(); i++)
     {

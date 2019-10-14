@@ -9,8 +9,8 @@ using namespace std;
 
 typedef void (*handle_func_t)(void*);
 
-namespace fsw { namespace coroutine {
-class HttpServer
+namespace fsw { namespace coroutine { namespace http {
+class Server
 {
 private:
     Socket *socket;
@@ -18,14 +18,15 @@ private:
     bool running;
     
 public:
-    HttpServer(char *host, int port);
-    ~HttpServer();
+    Server(char *host, int port);
+    ~Server();
     bool start();
     bool on_accept(Socket *conn);
     bool shutdown();
     void set_handler(string pattern, handle_func_t fn);
     handle_func_t get_handler(string pattern);
 };
+}
 }
 }
 
