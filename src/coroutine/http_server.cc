@@ -50,6 +50,7 @@ bool HttpServer::start()
             return false;
         }
 
+        on_accept(conn);
         // Coroutine::create(handler, (void *)conn);
     }
     return true;
@@ -60,6 +61,18 @@ bool HttpServer::on_accept(Socket *conn)
     http_parser *parser = new http_parser();
     http_parser_init(parser, HTTP_REQUEST);
     parser->data = conn;
+
+    size_t len = 80 * 1024;
+    size_t nparsed;
+    char buf[len];
+    ssize_t recved;
+
+    recved = conn->recv(buf, len);
+
+    /* Start up / continue the parser.
+    * Note we pass recved==0 to signal that EOF has been received.
+    */
+    nparsed = http_parser_execute(parser, &parser_settings, buf, recved);
 }
 
 bool HttpServer::shutdown()
