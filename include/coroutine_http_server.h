@@ -21,7 +21,7 @@ public:
     HttpServer(char *host, int port);
     ~HttpServer();
     bool start();
-    bool on_accept();
+    bool on_accept(Socket *conn);
     bool shutdown();
     void set_handler(string pattern, handle_func_t fn);
     handle_func_t get_handler(string pattern);

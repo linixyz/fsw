@@ -37,12 +37,12 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
 
 file(GLOB_RECURSE SRC_LIST FOLLOW_SYMLINKS src/*.c src/*.cc thirdparty/boost/asm/combined.S thirdparty/http/http_parser.c)
-file(GLOB_RECURSE HEAD_FILES FOLLOW_SYMLINKS include/*.h)
+file(GLOB_RECURSE HEAD_FILES FOLLOW_SYMLINKS include/*.h thirdparty/http/*.h)
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
-include_directories(BEFORE ./include)
+include_directories(BEFORE ./include ./thirdparty/http)
 
 #shared library
 add_library(shared SHARED ${SRC_LIST})

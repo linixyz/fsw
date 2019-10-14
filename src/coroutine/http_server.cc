@@ -2,10 +2,23 @@
 #include "socket.h"
 #include "log.h"
 #include "coroutine.h"
+#include "http_parser.h"
 
 using fsw::coroutine::HttpServer;
 using fsw::coroutine::Socket;
 using fsw::Coroutine;
+
+static const http_parser_settings parser_settings =
+{
+    .on_message_begin = NULL,
+    .on_url = NULL,
+    .on_status = NULL,
+    .on_header_field = NULL,
+    .on_header_value = NULL,
+    .on_headers_complete = NULL,
+    .on_body = NULL,
+    .on_message_complete = NULL,
+};
 
 HttpServer::HttpServer(char *host, int port)
 {
@@ -42,9 +55,11 @@ bool HttpServer::start()
     return true;
 }
 
-bool HttpServer::on_accept()
+bool HttpServer::on_accept(Socket *conn)
 {
-
+    http_parser *parser = new http_parser();
+    http_parser_init(parser, HTTP_REQUEST);
+    parser->data = conn;
 }
 
 bool HttpServer::shutdown()
