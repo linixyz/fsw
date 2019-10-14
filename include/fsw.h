@@ -37,7 +37,9 @@
 #include <sys/stat.h>
 
 #include <queue>
-#include <list> 
+#include <map>
+#include <list>
+#include <string>
 #include <iostream>
 
 #include "config.h"
