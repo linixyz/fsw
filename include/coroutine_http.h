@@ -5,8 +5,10 @@
 #include "http_parser.h"
 
 namespace fsw { namespace coroutine { namespace http {
-struct http_request
+
+class Request
 {
+private:
     int version;
     char *path;
     uint32_t path_len;
@@ -16,11 +18,12 @@ struct http_request
     size_t body_length;
 };
 
-struct ctx
+class Ctx
 {
+private:
     void *private_data;
     http_parser parser;
-    http_request request;
+    Request request;
 };
 }
 }
