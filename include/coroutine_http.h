@@ -2,7 +2,10 @@
 #define COROUTINE_HTTP_H
 
 #include "fsw.h"
+#include "coroutine_socket.h"
 #include "http_parser.h"
+
+using fsw::coroutine::Socket;
 
 namespace fsw { namespace coroutine { namespace http {
 
@@ -16,14 +19,19 @@ private:
     uint32_t ext_len;
     uint8_t post_form_urlencoded;
     size_t body_length;
+public:
+    Request();
 };
 
 class Ctx
 {
 private:
-    void *private_data;
+    Socket *private_data;
     http_parser parser;
     Request request;
+public:
+    Ctx(Socket *conn);
+    ~Ctx();
 };
 }
 }
