@@ -22,7 +22,12 @@ static int http_request_on_message_begin(http_parser *parser)
 
 static int http_request_on_url(http_parser *parser, const char *at, size_t length)
 {
-    fswTrace("http request on url");
+    Ctx *ctx = (Ctx *)parser->data;
+    /**
+     * because const char *at may be destroyed, so must copy to ctx->request.path
+     */
+    ctx->request.path = new char[length];
+    memcpy(ctx->request.path, at, length);
     return 0;
 }
 
@@ -34,13 +39,29 @@ static int http_request_on_status(http_parser *parser, const char *at, size_t le
 
 static int http_request_on_header_field(http_parser *parser, const char *at, size_t length)
 {
-    fswTrace("http request on header field");
+    Ctx *ctx = (Ctx *)parser->data;
+    ctx->current_header_name = (char *) at;
+    ctx->current_header_name_len = length;
     return 0;
 }
 
 static int http_request_on_header_value(http_parser *parser, const char *at, size_t length)
 {
-    fswTrace("http request on headers value");
+    Ctx *ctx = (Ctx *)parser->data;
+    std::map<char *, char *> &headers = ctx->request.headers;
+    size_t header_len = ctx->current_header_name_len;
+    char *header_name = new char[header_len];
+
+    memcpy(header_name, ctx->current_header_name, header_len);
+    for (size_t i = 0; i < header_len; i++)
+    {
+        header_name[i] = tolower(header_name[i]);
+    }
+
+    char *header_value = new char[length];
+    memcpy(header_value, at, length);
+    headers[header_name] = header_value;
+    
     return 0;
 }
 
@@ -77,6 +98,20 @@ static const http_parser_settings parser_settings =
 Request::Request()
 {
     
+}
+
+Request::~Request()
+{
+    delete[] path;
+
+    /**
+     * delete header name and header value
+     */
+    for (auto i = headers.begin(); i != headers.end(); i++)
+    {
+        delete[] i->first;
+        delete[] i->second;
+    }
 }
 
 Ctx::Ctx(Socket *_conn)

@@ -21,8 +21,10 @@ public:
     uint32_t ext_len;
     uint8_t post_form_urlencoded;
     size_t body_length;
-    
+    std::map<char*, char*> headers;
+
     Request();
+    ~Request();
 };
 
 class Ctx
@@ -31,6 +33,8 @@ public:
     Socket *conn;
     http_parser parser;
     Request request;
+    char *current_header_name;
+    size_t current_header_name_len;
 
     Ctx(Socket *_conn);
     ~Ctx();
