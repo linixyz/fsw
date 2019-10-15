@@ -11,8 +11,11 @@ char response_str[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection:
 
 void handler(Request *request)
 {
-    char target[] = "host";
-    cout << request->header.find(target)->second << endl;
+    for(auto elem : request->header)
+    {
+        std::cout << elem.first << endl;
+        std::cout << elem.second << endl;
+    }
     return;
 }
 
