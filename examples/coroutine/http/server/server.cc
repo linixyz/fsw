@@ -28,7 +28,7 @@ int main(int argc, char const *argv[])
         char ip[] = "127.0.0.1";
 
         Server *serv = new Server(ip, 80);
-        serv->set_handler("/", handler);
+        serv->set_handler(string("/index"), handler);
         serv->start();
     });
 
