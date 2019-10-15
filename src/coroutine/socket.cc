@@ -77,6 +77,16 @@ int Socket::close()
     return fswSocket_close(sockfd);
 }
 
+char* Socket::get_read_buf()
+{
+    return read_buf;
+}
+
+char* Socket::get_write_buf()
+{
+    return write_buf;
+}
+
 bool Socket::wait_event(int event)
 {
     long id;
