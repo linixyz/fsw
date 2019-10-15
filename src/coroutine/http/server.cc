@@ -40,6 +40,7 @@ static void on_accept(void *arg)
     if (handler != nullptr)
     {
         handler(&(ctx->request));
+        delete ctx;
     }
 }
 
