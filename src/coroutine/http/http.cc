@@ -2,6 +2,7 @@
 #include "log.h"
 
 using fsw::coroutine::http::Request;
+using fsw::coroutine::http::Response;
 using fsw::coroutine::http::Ctx;
 using fsw::coroutine::Socket;
 
@@ -132,10 +133,41 @@ Request::~Request()
     delete[] body;
 }
 
+Response::Response()
+{
+    
+}
+
+Response::~Response()
+{
+    
+}
+
+void Response::end(std::string body)
+{
+    Socket *conn = this->ctx->conn;
+
+    std::string& buf = conn->get_write_buf();
+    buf.clear();
+    buf.append("HTTP/1.1 200 OK\r\n");
+    for(auto h : this->header)
+    {
+        buf.append(h.first);
+        buf.append(": ");
+        buf.append(h.second);
+        buf.append("\r\n");
+    }
+    buf.append("\r\n");
+    buf.append(body);
+    buf.append("\r\n");
+    conn->send(buf.c_str(), buf.length());
+}
+
 Ctx::Ctx(Socket *_conn)
 {
     conn = _conn;
     parser.data = this;
+    this->response.ctx = this;
 }
 
 Ctx::~Ctx()

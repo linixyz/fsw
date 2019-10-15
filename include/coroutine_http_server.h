@@ -8,8 +8,9 @@
 
 using namespace std;
 using fsw::coroutine::http::Request;
+using fsw::coroutine::http::Response;
 
-typedef void (*on_accept_handler)(Request*);
+typedef void (*on_accept_handler)(Request*, Response*);
 
 namespace fsw { namespace coroutine { namespace http {
 class Server

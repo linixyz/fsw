@@ -26,12 +26,29 @@ public:
     ~Request();
 };
 
+
+class Response
+{
+public:
+    Ctx *ctx;
+    std::string method;
+    int version;
+    int status;
+    std::string reason;
+    std::map<std::string, std::string> header;
+
+    Response();
+    ~Response();
+    void end(std::string body);
+};
+
 class Ctx
 {
 public:
     Socket *conn;
     http_parser parser;
     Request request;
+    Response response;
     char *current_header_name;
     size_t current_header_name_len;
 

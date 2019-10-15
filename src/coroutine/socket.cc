@@ -82,7 +82,7 @@ char* Socket::get_read_buf()
     return read_buf;
 }
 
-char* Socket::get_write_buf()
+std::string& Socket::get_write_buf()
 {
     return write_buf;
 }

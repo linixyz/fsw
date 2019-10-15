@@ -13,7 +13,7 @@ class Socket
 private:
     int sockfd;
     char read_buf[READ_BUF_MAX_SIZE];
-    char write_buf[WRITE_BUF_MAX_SIZE];
+    std::string write_buf;
 public:
     Socket(int domain, int type, int protocol);
     Socket(int fd);
@@ -25,7 +25,7 @@ public:
     ssize_t send(const void *buf, size_t len);
     int close();
     char *get_read_buf();
-    char *get_write_buf();
+    std::string& get_write_buf();
 
     bool wait_event(int event);
 
