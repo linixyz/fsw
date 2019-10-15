@@ -26,7 +26,7 @@ static int http_request_on_url(http_parser *parser, const char *at, size_t lengt
     /**
      * because const char *at may be destroyed, so must copy to ctx->request.path
      */
-    ctx->request.path = new char[length];
+    ctx->request.path = new char[length + 1]();
     memcpy(ctx->request.path, at, length);
     ctx->request.path_len = length;
     return 0;

@@ -95,7 +95,7 @@ on_accept_handler Server::get_handler(string pattern)
 {
     for (auto i = handlers.begin(); i != handlers.end(); i++)
     {
-        if (strncasecmp(i->first.c_str(), pattern.c_str(), i->first.length()) == 0)
+        if (strncasecmp(i->first.c_str(), pattern.c_str(), i->first.length()) == 0 && i->first.length() == pattern.length())
         {
             return i->second;
         }
