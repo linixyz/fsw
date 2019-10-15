@@ -70,6 +70,18 @@ static int http_request_on_headers_complete(http_parser *parser)
 {
     Ctx *ctx = (Ctx *)parser->data;
     ctx->request.version = parser->http_major * 100 + parser->http_minor;
+
+    switch (parser->method)
+    {
+    case HTTP_GET:
+        ctx->request.method = "GET";
+        break;
+    case HTTP_POST:
+        ctx->request.method = "POST";
+        break;
+    default:
+        break;
+    }
     return 0;
 }
 

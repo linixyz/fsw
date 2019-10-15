@@ -14,6 +14,7 @@ class Ctx;
 class Request
 {
 public:
+    std::string method;
     int version;
     char *path;
     uint32_t path_len;
