@@ -68,7 +68,8 @@ static int http_request_on_header_value(http_parser *parser, const char *at, siz
 
 static int http_request_on_headers_complete(http_parser *parser)
 {
-    fswTrace("http request on message complete");
+    Ctx *ctx = (Ctx *)parser->data;
+    ctx->request.version = parser->http_major * 100 + parser->http_minor;
     return 0;
 }
 
