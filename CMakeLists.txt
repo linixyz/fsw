@@ -7,7 +7,7 @@ set(FSW_VERSION 0.0.1)
 # set(FSW_CLFLAGS pthread uv)
 set(CMAKE_CXX_STANDARD 11)
 set(ENABLE_DEBUG OFF)
-set(ENABLE_TRACE ON)
+set(ENABLE_TRACE OFF)
 
 include(CheckFunctionExists)
 check_function_exists(epoll_create HAVE_EPOLL)
