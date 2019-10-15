@@ -17,7 +17,7 @@ struct http_accept_handler_args
     Socket *conn;
 };
 
-static void on_accept(void *arg)
+static void http_connection_on_accept(void *arg)
 {
     ssize_t recved;
     /**
@@ -75,7 +75,7 @@ bool Server::start()
         }
 
         http_accept_handler_args arg = {this, conn};
-        Coroutine::create(on_accept, (void *)&arg);
+        Coroutine::create(http_connection_on_accept, (void *)&arg);
     }
     return true;
 }
