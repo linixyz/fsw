@@ -5,10 +5,43 @@
 #include "coroutine.h"
 #include "http_parser.h"
 
+using fsw::coroutine::http::Request;
 using fsw::coroutine::http::Server;
 using fsw::coroutine::http::Ctx;
 using fsw::coroutine::Socket;
 using fsw::Coroutine;
+
+struct http_accept_handler_args
+{
+    Server *server;
+    Socket *conn;
+};
+
+static void on_accept(void *arg)
+{
+    ssize_t recved;
+    /**
+     * Note that the coroutine cannot be switched out, otherwise the member content in arg may change.
+     */
+    Server *server = ((http_accept_handler_args *)arg)->server;
+    Socket *conn = ((http_accept_handler_args *)arg)->conn;
+    Ctx *ctx = new Ctx(conn);
+
+    http_parser_init(&ctx->parser, HTTP_REQUEST);
+
+    recved = conn->recv(conn->get_read_buf(), READ_BUF_MAX_SIZE);
+
+    /* Start up / continue the parser.
+    * Note we pass recved==0 to signal that EOF has been received.
+    */
+    ctx->parse(recved);
+    string path(ctx->request.path);
+    on_accept_handler handler = server->get_handler(path);
+    if (handler != nullptr)
+    {
+        handler(&(ctx->request));
+    }
+}
 
 Server::Server(char *host, int port)
 {
@@ -40,25 +73,9 @@ bool Server::start()
             return false;
         }
 
-        on_accept(conn);
-        // Coroutine::create(handler, (void *)conn);
+        http_accept_handler_args arg = {this, conn};
+        Coroutine::create(on_accept, (void *)&arg);
     }
-    return true;
-}
-
-bool Server::on_accept(Socket *conn)
-{
-    ssize_t recved;
-    Ctx *ctx = new Ctx(conn);
-
-    http_parser_init(&ctx->parser, HTTP_REQUEST);
-
-    recved = conn->recv(conn->get_read_buf(), READ_BUF_MAX_SIZE);
-
-    /* Start up / continue the parser.
-    * Note we pass recved==0 to signal that EOF has been received.
-    */
-    ctx->parse(recved);
     return true;
 }
 
@@ -68,12 +85,12 @@ bool Server::shutdown()
     return true;
 }
 
-void Server::set_handler(string pattern, handle_func_t fn)
+void Server::set_handler(string pattern, on_accept_handler fn)
 {
     handlers[pattern] = fn;
 }
 
-handle_func_t Server::get_handler(string pattern)
+on_accept_handler Server::get_handler(string pattern)
 {
     for (auto i = handlers.begin(); i != handlers.end(); i++)
     {

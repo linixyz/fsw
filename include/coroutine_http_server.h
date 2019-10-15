@@ -4,27 +4,28 @@
 #include "fsw.h"
 #include "coroutine.h"
 #include "coroutine_socket.h"
+#include "coroutine_http.h"
 
 using namespace std;
+using fsw::coroutine::http::Request;
 
-typedef void (*handle_func_t)(void*);
+typedef void (*on_accept_handler)(Request*);
 
 namespace fsw { namespace coroutine { namespace http {
 class Server
 {
 private:
     Socket *socket;
-    map<string, handle_func_t> handlers;
+    map<string, on_accept_handler> handlers;
     bool running;
     
 public:
     Server(char *host, int port);
     ~Server();
     bool start();
-    bool on_accept(Socket *conn);
     bool shutdown();
-    void set_handler(string pattern, handle_func_t fn);
-    handle_func_t get_handler(string pattern);
+    void set_handler(string pattern, on_accept_handler fn);
+    on_accept_handler get_handler(string pattern);
 };
 }
 }

@@ -1,14 +1,18 @@
+#include "fsw/coroutine_http.h"
 #include "fsw/coroutine_http_server.h"
 #include "fsw/coroutine.h"
 
 using fsw::Coroutine;
+using fsw::coroutine::http::Request;
 using fsw::coroutine::http::Server;
 using fsw::coroutine::Socket;
 
 char response_str[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\nContent-Length: 11\r\n\r\nhello world\r\n";
 
-void handler(void *args)
+void handler(Request *request)
 {
+    char target[] = "host";
+    cout << request->header.find(target)->second << endl;
     return;
 }
 
