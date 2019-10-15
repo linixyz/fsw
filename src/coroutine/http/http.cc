@@ -87,7 +87,10 @@ static int http_request_on_headers_complete(http_parser *parser)
 
 static int http_request_on_body(http_parser *parser, const char *at, size_t length)
 {
-    fswTrace("http request on body");
+    Ctx *ctx = (Ctx *)parser->data;
+    ctx->request.body = new char[length + 1]();
+    memcpy(ctx->request.body, at, length);
+    ctx->request.body_length = length;
     return 0;
 }
 
@@ -126,6 +129,7 @@ Request::~Request()
         delete[] i->first;
         delete[] i->second;
     }
+    delete[] body;
 }
 
 Ctx::Ctx(Socket *_conn)

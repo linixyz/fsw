@@ -21,6 +21,7 @@ public:
     const char *ext;
     uint32_t ext_len;
     uint8_t post_form_urlencoded;
+    char *body;
     size_t body_length;
     std::map<char*, char*> header;
 

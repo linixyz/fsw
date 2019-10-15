@@ -21,6 +21,7 @@ void handler(Request *request)
 
     std::cout << "version: " << request->version << endl;
     std::cout << "method: " << request->method << endl;
+    std::cout << "body: " << request->body << endl;
     return;
 }
 
