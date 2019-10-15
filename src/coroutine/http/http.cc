@@ -48,7 +48,7 @@ static int http_request_on_header_field(http_parser *parser, const char *at, siz
 static int http_request_on_header_value(http_parser *parser, const char *at, size_t length)
 {
     Ctx *ctx = (Ctx *)parser->data;
-    std::map<char *, char *> &headers = ctx->request.headers;
+    std::map<char *, char *> &headers = ctx->request.header;
     size_t header_len = ctx->current_header_name_len;
     char *header_name = new char[header_len];
 
@@ -107,7 +107,7 @@ Request::~Request()
     /**
      * delete header name and header value
      */
-    for (auto i = headers.begin(); i != headers.end(); i++)
+    for (auto i = header.begin(); i != header.end(); i++)
     {
         delete[] i->first;
         delete[] i->second;

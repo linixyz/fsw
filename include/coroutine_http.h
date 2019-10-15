@@ -21,7 +21,7 @@ public:
     uint32_t ext_len;
     uint8_t post_form_urlencoded;
     size_t body_length;
-    std::map<char*, char*> headers;
+    std::map<char*, char*> header;
 
     Request();
     ~Request();
