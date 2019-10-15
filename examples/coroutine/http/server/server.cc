@@ -11,11 +11,15 @@ char response_str[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection:
 
 void handler(Request *request)
 {
+    /**
+     * print header
+     */
     for(auto elem : request->header)
     {
-        std::cout << elem.first << endl;
-        std::cout << elem.second << endl;
+        std::cout << elem.first << ": " << elem.second << endl;
     }
+
+    std::cout << "version: " << request->version << endl;
     return;
 }
 
