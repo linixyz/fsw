@@ -13,7 +13,7 @@ class Ctx;
 
 class Request
 {
-private:
+public:
     int version;
     char *path;
     uint32_t path_len;
@@ -21,7 +21,7 @@ private:
     uint32_t ext_len;
     uint8_t post_form_urlencoded;
     size_t body_length;
-public:
+    
     Request();
 };
 
