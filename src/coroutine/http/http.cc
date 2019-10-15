@@ -51,7 +51,7 @@ static int http_request_on_header_value(http_parser *parser, const char *at, siz
     Ctx *ctx = (Ctx *)parser->data;
     std::map<char *, char *> &headers = ctx->request.header;
     size_t header_len = ctx->current_header_name_len;
-    char *header_name = new char[header_len];
+    char *header_name = new char[header_len + 1]();
 
     memcpy(header_name, ctx->current_header_name, header_len);
     for (size_t i = 0; i < header_len; i++)
@@ -59,7 +59,7 @@ static int http_request_on_header_value(http_parser *parser, const char *at, siz
         header_name[i] = tolower(header_name[i]);
     }
 
-    char *header_value = new char[length];
+    char *header_value = new char[length + 1]();
     memcpy(header_value, at, length);
     headers[header_name] = header_value;
     
