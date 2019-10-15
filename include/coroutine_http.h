@@ -9,6 +9,8 @@ using fsw::coroutine::Socket;
 
 namespace fsw { namespace coroutine { namespace http {
 
+class Ctx;
+
 class Request
 {
 private:
@@ -25,13 +27,14 @@ public:
 
 class Ctx
 {
-private:
-    Socket *private_data;
+public:
+    Socket *conn;
     http_parser parser;
     Request request;
-public:
-    Ctx(Socket *conn);
+
+    Ctx(Socket *_conn);
     ~Ctx();
+    size_t parse(ssize_t recved);
 };
 }
 }
