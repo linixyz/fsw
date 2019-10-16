@@ -1,4 +1,5 @@
 #include "buffer.h"
+#include "log.h"
 
 using fsw::Buffer;
 
@@ -38,6 +39,11 @@ void Buffer::append(char *str, size_t length)
     off_t cursor = 0;
     char *src_buffer = str;
 
+    if (_length + length > _size)
+    {
+        fswError("buffer capacity is not enough");
+    }
+
     while (cursor < end)
     {
         _buffer[_length++] = src_buffer[cursor++];
@@ -50,6 +56,11 @@ void Buffer::append(Buffer *buffer)
     off_t end = buffer->length();
     off_t cursor = 0;
     char *src_buffer = buffer->c_buffer();
+
+    if (_length + buffer->length() > _size)
+    {
+        fswError("buffer capacity is not enough");
+    }
 
     while (cursor < end)
     {
