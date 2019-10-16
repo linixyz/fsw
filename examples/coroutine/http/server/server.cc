@@ -8,23 +8,12 @@ using fsw::coroutine::http::Response;
 using fsw::coroutine::http::Server;
 using fsw::coroutine::Socket;
 
-char response_str[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\nContent-Length: 11\r\n\r\nhello world\r\n";
-
 void handler(Request *request, Response *response)
 {
-    /**
-     * print header
-     */
-    for(auto elem : request->header)
-    {
-        std::cout << elem.first << ": " << elem.second << endl;
-    }
+    std::string response_body = "hello world";
 
-    std::cout << "version: " << request->version << endl;
-    std::cout << "method: " << request->method << endl;
-    std::cout << "body: " << request->body << endl;
-
-    std::string response_body = "fsw server";
+    response->header["Content-Type"] = "text/html";
+    response->header["Connection"] = "close";
     response->header["Content-Length"] = std::to_string(response_body.length());
     response->end(response_body);
     return;
