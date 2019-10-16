@@ -18,5 +18,8 @@ int main(int argc, char const *argv[])
     buffer2->append(buffer1);
     assert(strcmp(buffer2->c_buffer(), "aaaaaaaa") == 0);
     assert(buffer2->length() == 8);
+
+    Buffer *buffer3 = new Buffer(1);
+    buffer3->append(src_buffer, strlen(src_buffer));
     return 0;
 }
