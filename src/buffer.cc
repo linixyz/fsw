@@ -51,6 +51,24 @@ void Buffer::append(char *str, size_t length)
     _buffer[_length] = 0;
 }
 
+void Buffer::append(std::string str)
+{
+    off_t end = str.length();
+    off_t cursor = 0;
+    const char *src_buffer = str.c_str();
+
+    if (_length + str.length() > _size)
+    {
+        fswError("buffer capacity is not enough");
+    }
+
+    while (cursor < end)
+    {
+        _buffer[_length++] = src_buffer[cursor++];
+    }
+    _buffer[_length] = 0;
+}
+
 void Buffer::append(Buffer *buffer)
 {
     off_t end = buffer->length();
@@ -67,4 +85,13 @@ void Buffer::append(Buffer *buffer)
         _buffer[_length++] = src_buffer[cursor++];
     }
     _buffer[_length] = 0;
+}
+
+void Buffer::clear()
+{
+    for (size_t i = 0; i < _length; i++)
+    {
+        _buffer[_length] = 0;
+    }
+    _length = 0;
 }
