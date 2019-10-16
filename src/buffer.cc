@@ -42,7 +42,7 @@ void Buffer::append(char *str, size_t length)
     {
         _buffer[_length++] = src_buffer[cursor++];
     }
-    _buffer[_length++] = 0;
+    _buffer[_length] = 0;
 }
 
 void Buffer::append(Buffer *buffer)
@@ -55,5 +55,5 @@ void Buffer::append(Buffer *buffer)
     {
         _buffer[_length++] = src_buffer[cursor++];
     }
-    _buffer[_length++] = 0;
+    _buffer[_length] = 0;
 }
