@@ -1,21 +1,27 @@
 #include "fsw/coroutine_http.h"
 #include "fsw/coroutine_http_server.h"
 #include "fsw/coroutine.h"
+#include "fsw/buffer.h"
 
 using fsw::Coroutine;
 using fsw::coroutine::http::Request;
 using fsw::coroutine::http::Response;
 using fsw::coroutine::http::Server;
 using fsw::coroutine::Socket;
+using fsw::Buffer;
 
 void handler(Request *request, Response *response)
 {
-    std::string response_body = "hello world";
+    char response_body[] = "hello world";
+    Buffer *buffer = new Buffer(1024);
+    buffer->append(response_body, sizeof(response_body) - 1);
 
     response->header["Content-Type"] = "text/html";
     response->header["Connection"] = "close";
-    response->header["Content-Length"] = std::to_string(response_body.length());
-    response->end(response_body);
+    response->header["Content-Length"] = std::to_string(buffer->length());
+    response->end(buffer);
+
+    delete buffer;
     return;
 }
 

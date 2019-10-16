@@ -143,24 +143,24 @@ Response::~Response()
     
 }
 
-void Response::end(std::string body)
+void Response::end(Buffer *body)
 {
     Socket *conn = this->ctx->conn;
 
-    std::string& buf = conn->get_write_buf();
-    buf.clear();
-    buf.append("HTTP/1.1 200 OK\r\n");
+    Buffer* buf = conn->get_write_buf();
+    buf->clear();
+    buf->append("HTTP/1.1 200 OK\r\n");
     for(auto h : this->header)
     {
-        buf.append(h.first);
-        buf.append(": ");
-        buf.append(h.second);
-        buf.append("\r\n");
+        buf->append(h.first);
+        buf->append(": ");
+        buf->append(h.second);
+        buf->append("\r\n");
     }
-    buf.append("\r\n");
-    buf.append(body);
-    buf.append("\r\n");
-    conn->send(buf.c_str(), buf.length());
+    buf->append("\r\n");
+    buf->append(body);
+    buf->append("\r\n");
+    conn->send(buf->c_buffer(), buf->length());
 }
 
 Ctx::Ctx(Socket *_conn)
@@ -180,6 +180,7 @@ size_t Ctx::parse(ssize_t recved)
     size_t nparsed;
     Socket *conn = this->conn;
 
-    nparsed = http_parser_execute(&parser, &parser_settings, conn->get_read_buf(), recved);
+    conn->get_read_buf()->clear();
+    nparsed = http_parser_execute(&parser, &parser_settings, conn->get_read_buf()->c_buffer(), recved);
     return nparsed;
 }

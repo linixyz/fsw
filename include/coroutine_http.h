@@ -4,8 +4,10 @@
 #include "fsw.h"
 #include "coroutine_socket.h"
 #include "http_parser.h"
+#include "buffer.h"
 
 using fsw::coroutine::Socket;
+using fsw::Buffer;
 
 namespace fsw { namespace coroutine { namespace http {
 
@@ -39,7 +41,7 @@ public:
 
     Response();
     ~Response();
-    void end(std::string body);
+    void end(Buffer *body);
 };
 
 class Ctx

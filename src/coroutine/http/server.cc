@@ -4,12 +4,14 @@
 #include "log.h"
 #include "coroutine.h"
 #include "http_parser.h"
+#include "buffer.h"
 
 using fsw::coroutine::http::Request;
 using fsw::coroutine::http::Server;
 using fsw::coroutine::http::Ctx;
 using fsw::coroutine::Socket;
 using fsw::Coroutine;
+using fsw::Buffer;
 
 struct http_accept_handler_args
 {
@@ -29,7 +31,7 @@ static void http_connection_on_accept(void *arg)
 
     http_parser_init(&ctx->parser, HTTP_REQUEST);
 
-    recved = conn->recv(conn->get_read_buf(), READ_BUF_MAX_SIZE);
+    recved = conn->recv(conn->get_read_buf()->c_buffer(), READ_BUF_MAX_SIZE);
 
     /* Start up / continue the parser.
     * Note we pass recved==0 to signal that EOF has been received.
