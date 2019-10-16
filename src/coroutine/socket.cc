@@ -77,13 +77,21 @@ int Socket::close()
     return fswSocket_close(sockfd);
 }
 
-char* Socket::get_read_buf()
+Buffer* Socket::get_read_buf()
 {
+    if (!read_buf)
+    {
+        read_buf = new Buffer(READ_BUF_MAX_SIZE);
+    }
     return read_buf;
 }
 
-std::string& Socket::get_write_buf()
+Buffer* Socket::get_write_buf()
 {
+    if (!write_buf)
+    {
+        write_buf = new Buffer(WRITE_BUF_MAX_SIZE);
+    }
     return write_buf;
 }
 

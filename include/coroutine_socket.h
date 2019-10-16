@@ -5,6 +5,9 @@
 #define WRITE_BUF_MAX_SIZE 80 * 1024
 
 #include "fsw.h"
+#include "buffer.h"
+
+using fsw::Buffer;
 
 namespace fsw { namespace coroutine {
     
@@ -12,8 +15,8 @@ class Socket
 {
 private:
     int sockfd;
-    char read_buf[READ_BUF_MAX_SIZE];
-    std::string write_buf;
+    Buffer *read_buf = nullptr;
+    Buffer *write_buf = nullptr;
 public:
     Socket(int domain, int type, int protocol);
     Socket(int fd);
@@ -24,8 +27,8 @@ public:
     ssize_t recv(void *buf, size_t len);
     ssize_t send(const void *buf, size_t len);
     int close();
-    char *get_read_buf();
-    std::string& get_write_buf();
+    Buffer* get_read_buf();
+    Buffer* get_write_buf();
 
     bool wait_event(int event);
 
