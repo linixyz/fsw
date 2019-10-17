@@ -20,7 +20,7 @@ public:
     int version;
     char *path;
     uint32_t path_len;
-    char *body;
+    char *body = nullptr;
     size_t body_length;
     std::map<char*, char*> header;
 
