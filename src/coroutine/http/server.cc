@@ -42,6 +42,7 @@ static void http_connection_on_accept(void *arg)
     if (handler != nullptr)
     {
         handler(&(ctx->request), &(ctx->response));
+        conn->close();
         delete ctx;
     }
 }
