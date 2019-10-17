@@ -24,6 +24,8 @@ Socket::Socket(int fd)
 
 Socket::~Socket()
 {
+    delete read_buf;
+    delete write_buf;
 }
 
 int Socket::bind(int type, char *host, int port)
