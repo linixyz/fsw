@@ -37,7 +37,7 @@ public:
     int version;
     int status;
     std::string reason;
-    std::map<std::string, std::string> header;
+    std::map<Buffer*, Buffer*> header;
 
     Response();
     ~Response();
