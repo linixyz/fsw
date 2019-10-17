@@ -1,8 +1,8 @@
 #ifndef COROUTINE_SOCKET_H
 #define COROUTINE_SOCKET_H
 
-#define READ_BUF_MAX_SIZE 80 * 1024
-#define WRITE_BUF_MAX_SIZE 80 * 1024
+#define READ_BUF_MAX_SIZE 1024
+#define WRITE_BUF_MAX_SIZE 1024
 
 #include "fsw.h"
 #include "buffer.h"
