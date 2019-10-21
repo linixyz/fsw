@@ -35,55 +35,37 @@ char* Buffer::c_buffer()
 
 void Buffer::append(char *str, size_t length)
 {
-    off_t end = length;
-    off_t cursor = 0;
-    char *src_buffer = str;
-
     if (_length + length > _size)
     {
         fswError("buffer capacity is not enough");
     }
 
-    while (cursor < end)
-    {
-        _buffer[_length++] = src_buffer[cursor++];
-    }
+    memcpy(_buffer + _length, str, length);
+    _length += length;
     _buffer[_length] = 0;
 }
 
 void Buffer::append(std::string str)
 {
-    off_t end = str.length();
-    off_t cursor = 0;
-    const char *src_buffer = str.c_str();
-
     if (_length + str.length() > _size)
     {
         fswError("buffer capacity is not enough");
     }
 
-    while (cursor < end)
-    {
-        _buffer[_length++] = src_buffer[cursor++];
-    }
+    memcpy(_buffer + _length, str.c_str(), str.length());
+    _length += str.length();
     _buffer[_length] = 0;
 }
 
 void Buffer::append(Buffer *buffer)
 {
-    off_t end = buffer->length();
-    off_t cursor = 0;
-    char *src_buffer = buffer->c_buffer();
-
     if (_length + buffer->length() > _size)
     {
         fswError("buffer capacity is not enough");
     }
 
-    while (cursor < end)
-    {
-        _buffer[_length++] = src_buffer[cursor++];
-    }
+    memcpy(_buffer + _length, buffer->c_buffer(), buffer->length());
+    _length += buffer->length();
     _buffer[_length] = 0;
 }
 
