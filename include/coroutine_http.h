@@ -18,7 +18,7 @@ class Request
 public:
     std::string method;
     int version;
-    char *path;
+    char *path = nullptr;
     uint32_t path_len;
     char *body = nullptr;
     size_t body_length;

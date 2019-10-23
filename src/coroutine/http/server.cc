@@ -32,6 +32,12 @@ static void http_connection_on_accept(void *arg)
     http_parser_init(&ctx->parser, HTTP_REQUEST);
 
     recved = conn->recv(conn->get_read_buf()->c_buffer(), READ_BUF_MAX_SIZE);
+    if (recved == 0)
+    {
+        conn->close();
+        delete ctx;
+        return;
+    }
 
     /* Start up / continue the parser.
     * Note we pass recved==0 to signal that EOF has been received.

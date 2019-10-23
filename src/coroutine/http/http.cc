@@ -120,7 +120,11 @@ Request::Request()
 
 Request::~Request()
 {
-    delete[] path;
+    if (path)
+    {
+        delete[] path;
+        path = nullptr;
+    }
 
     /**
      * delete header name and header value
