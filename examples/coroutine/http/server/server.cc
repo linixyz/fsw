@@ -21,17 +21,17 @@ void handler(Request *request, Response *response)
 
     char header2[] = "Connection";
     Buffer buffer3(10);
-    buffer3.append(value1, 10);
+    buffer3.append(header2, 10);
     char value2[] = "close";
     Buffer buffer4(5);
-    buffer4.append(value1, 5);
+    buffer4.append(value2, 5);
 
     char header3[] = "Content-Length";
     Buffer buffer5(14);
-    buffer5.append(value1, 14);
+    buffer5.append(header3, 14);
     char value3[] = "11";
     Buffer buffer6(2);
-    buffer6.append(value1, 2);
+    buffer6.append(value3, 2);
 
     char response_body[] = "hello world";
     Buffer *buffer = new Buffer(1024);
