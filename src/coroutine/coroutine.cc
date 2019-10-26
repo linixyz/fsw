@@ -20,6 +20,7 @@ void Coroutine::execute_defer_tasks()
             defer_task = defer_tasks->top();
             defer_tasks->pop();
             defer_task->fn(defer_task->args);
+            delete defer_task;
         }
         delete defer_tasks;
         defer_tasks = nullptr;
