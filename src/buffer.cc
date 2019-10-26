@@ -72,4 +72,5 @@ void Buffer::append(Buffer *buffer)
 void Buffer::clear()
 {
     _length = 0;
+    _buffer[0] = 0;
 }
