@@ -11,6 +11,38 @@ long Coroutine::last_cid = 0;
 std::unordered_map<long, Coroutine*> Coroutine::coroutines;
 size_t Coroutine::stack_size = DEFAULT_C_STACK_SIZE;
 
+void Coroutine::execute_defer_tasks()
+{
+    if (defer_tasks) {
+        defer_task *defer_task;
+        while(!defer_tasks->empty())
+        {
+            defer_task = defer_tasks->top();
+            defer_tasks->pop();
+            defer_task->fn(defer_task->args);
+        }
+        delete defer_tasks;
+        defer_tasks = nullptr;
+    }
+}
+
+long Coroutine::run()
+{
+    long cid = this->cid;
+    origin = current;
+    current = this;
+    ctx.swap_in();
+    if (ctx.is_end())
+    {
+        execute_defer_tasks();
+        fswTrace("coroutine[%ld] end", cid);
+        current = origin;
+        coroutines.erase(cid);
+        delete this;
+    }
+    return cid;
+}
+
 void* Coroutine::get_current_task()
 {
     return current ? current->get_task() : nullptr;
@@ -53,11 +85,24 @@ void Coroutine::resume()
     ctx.swap_in();
     if (ctx.is_end())
     {
+        execute_defer_tasks();
         fswTrace("coroutine[%ld] end", cid);
         current = origin;
         coroutines.erase(cid);
         delete this;
     }
+}
+
+void Coroutine::defer(coroutine_func_t _fn, void* _args)
+{
+    if (defer_tasks == nullptr)
+    {
+        defer_tasks = new std::stack<defer_task *>;
+    }
+    defer_task *task = new defer_task();
+    task->fn = _fn;
+    task->args = _args;
+    defer_tasks->push(task);
 }
 
 static void sleep_timeout(void *param)

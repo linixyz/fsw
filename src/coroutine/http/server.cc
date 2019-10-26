@@ -34,7 +34,6 @@ static void http_connection_on_accept(void *arg)
     recved = conn->recv(conn->get_read_buf()->c_buffer(), READ_BUF_MAX_SIZE);
     if (recved == 0)
     {
-        conn->close();
         delete ctx;
         return;
     }
@@ -48,7 +47,6 @@ static void http_connection_on_accept(void *arg)
     if (handler != nullptr)
     {
         handler(&(ctx->request), &(ctx->response));
-        conn->close();
         delete ctx;
     }
 }
