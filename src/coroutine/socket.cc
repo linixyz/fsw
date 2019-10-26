@@ -79,6 +79,11 @@ int Socket::close()
     return fswSocket_close(sockfd);
 }
 
+int Socket::shutdown(int how)
+{
+    return fswSocket_shutdown(sockfd, how);
+}
+
 Buffer* Socket::get_read_buf()
 {
     if (!read_buf)

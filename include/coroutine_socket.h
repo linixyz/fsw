@@ -27,6 +27,7 @@ public:
     ssize_t recv(void *buf, size_t len);
     ssize_t send(const void *buf, size_t len);
     int close();
+    int shutdown(int how);
     Buffer* get_read_buf();
     Buffer* get_write_buf();
 
