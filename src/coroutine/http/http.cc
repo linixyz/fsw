@@ -176,6 +176,7 @@ Ctx::Ctx(Socket *_conn)
 
 Ctx::~Ctx()
 {
+    conn->close();
     delete conn;
 }
 
