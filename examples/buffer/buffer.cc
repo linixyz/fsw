@@ -38,5 +38,16 @@ int main(int argc, char const *argv[])
     buffer5->append(test_buffer, strlen(test_buffer));
     buffer5->clear();
 
+    // Determines whether the length is 0
+    assert(buffer5->length() == 0);
+    // Determines whether the c_buffer is empty
+    assert(strcmp(buffer5->c_buffer(), "") == 0);
+
+    // call append() function again
+    char src_str[] = "abc";
+    buffer5->append(src_str, strlen(src_str));
+    assert(buffer5->length() == 3);
+    assert(strcmp(buffer5->c_buffer(), "abc") == 0);
+
     return 0;
 }
