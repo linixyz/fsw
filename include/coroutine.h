@@ -8,6 +8,12 @@
 
 #define DEFAULT_C_STACK_SIZE          (2 *1024 * 1024)
 
+struct defer_task
+{
+    coroutine_func_t fn;
+    void *args;
+};
+
 namespace fsw
 {
 class Coroutine
@@ -15,6 +21,7 @@ class Coroutine
 public:
     static std::unordered_map<long, Coroutine*> coroutines;
 
+    long run();
     static void* get_current_task();
     static long create(coroutine_func_t fn, void* args = nullptr);
     void* get_task();
@@ -22,6 +29,7 @@ public:
     void set_task(void *_task);
     void yield();
     void resume();
+    void defer(coroutine_func_t _fn, void* _args = nullptr);
     static int sleep(double seconds);
 
     inline long get_cid()
@@ -43,28 +51,15 @@ protected:
     Context ctx;
     long cid;
     static long last_cid;
+    std::stack<defer_task *> *defer_tasks = nullptr;
+
+    void execute_defer_tasks();
 
     Coroutine(coroutine_func_t fn, void *private_data) :
             ctx(stack_size, fn, private_data)
     {
         cid = ++last_cid;
         coroutines[cid] = this;
-    }
-
-    long run()
-    {
-        long cid = this->cid;
-        origin = current;
-        current = this;
-        ctx.swap_in();
-        if (ctx.is_end())
-        {
-            fswTrace("coroutine[%ld] end", cid);
-            current = origin;
-            coroutines.erase(cid);
-            delete this;
-        }
-        return cid;
     }
 };
 }
